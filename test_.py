@@ -15,7 +15,7 @@ def test_finding_anime_and_it_data():
     with pytest.raises(TypeError):
         data_handling.get_anime_info('an', False)
     with pytest.raises(TypeError):
-        data_handling.get_anime_info(66, False)
+        data_handling.get_anime_info(66, 45)
     
     #saving test
     dic: dict
