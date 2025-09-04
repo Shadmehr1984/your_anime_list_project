@@ -10,5 +10,9 @@
         ".",
         "-p",
         "test*.py"
+    ],
+    "cSpell.words": [
+        "animelist",
+        "animes"
     ]
 }
