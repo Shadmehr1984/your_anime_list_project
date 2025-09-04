@@ -121,6 +121,71 @@ DELIMITER //
     END//
 DELIMITER ;
 
+
+DELIMITER //
+    -- remove from list
+    DROP TRIGGER IF EXISTS delete_from_list;
+
+    CREATE TRIGGER delete_from_list
+    AFTER DELETE ON list
+    FOR EACH ROW
+    BEGIN
+		DECLARE all_watched INT;
+        
+        -- save log
+        INSERT INTO log_list
+        VALUES(
+            'delete',
+            OLD.anime_id,
+            OLD.account_id,
+            OLD.score,
+            OLD.status,
+            OLD.episodes_watched
+        );
+
+        -- update account information
+        IF OLD.status = 'completed' THEN
+            UPDATE account
+            SET account.completed_count = account.completed_count - 1
+            WHERE OLD.account_id = account.account_id;
+        ELSEIF OLD.status = 'dropped' THEN
+            UPDATE account
+            SET account.dropped_count = account.dropped_count - 1
+            WHERE OLD.account_id = account.account_id;
+        ELSEIF OLD.status = 'plan to watch' THEN
+            UPDATE account
+            SET account.plan_to_watch_count = account.plan_to_watch_count - 1
+            WHERE OLD.account_id = account.account_id;
+        ELSEIF OLD.status = 'watching' THEN
+            UPDATE account
+            SET account.watching_count = account.watching_count - 1
+            WHERE OLD.account_id = account.account_id;
+        ELSEIF OLD.status = 'on hold' THEN
+            UPDATE account
+            SET account.on_hold_count = account.on_hold_count - 1
+            WHERE OLD.account_id = account.account_id;
+        END IF;
+
+        -- update account avg score
+        IF OLD.status = 'completed' OR OLD.status = 'dropped' THEN
+            UPDATE account
+            SET all_watched = dropped_count + completed_count
+            WHERE OLD.account_id = account.account_id;
+
+            IF all_watched = 0 THEN
+                UPDATE account
+                SET avg_score = 0
+                WHERE OLD.account_id = account.account_id;
+            ELSEIF all_watched > 0 THEN
+                UPDATE account
+                SET avg_score = calculate_score(OLD.score, NULL, avg_score, all_watched + 1, 'decrease')
+                WHERE OLD.account_id = account.account_id;
+            END IF;
+        END IF;
+    END//
+DELIMITER ;
+
+
 DELIMITER //
     DROP TRIGGER IF EXISTS delete_account;
 
