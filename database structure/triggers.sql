@@ -111,7 +111,7 @@ DELIMITER //
 		DECLARE all_watched INT;
         
         -- save log
-        INSERT INTO log_list
+        INSERT INTO log_list(log_status, anime_id, new_score, new_status)
         VALUES(
             'insert',
             NEW.anime_id,
@@ -173,7 +173,7 @@ DELIMITER //
 		DECLARE all_watched INT;
         
         -- save log
-        INSERT INTO log_list
+        INSERT INTO log_list(log_status, anime_id, old_score, old_status)
         VALUES(
             'delete',
             OLD.anime_id,
@@ -219,6 +219,95 @@ DELIMITER //
                 SET avg_score = calculate_score(OLD.score, NULL, avg_score, all_watched + 1, 'decrease')
                 WHERE OLD.account_id = account.account_id;
             END IF;
+        END IF;
+    END//
+DELIMITER ;
+
+
+DELIMITER //
+    -- update list
+    DROP TRIGGER IF EXISTS update_list;
+
+    CREATE TRIGGER update_list
+    AFTER UPDATE ON list
+    FOR EACH ROW
+    BEGIN
+        DECLARE all_watched INT;
+
+
+        -- save log
+        INSERT INTO log_list(log_status, anime_id, new_score, old_score, new_status, old_status)
+        VALUES(
+            'update',
+            NEW.anime_id,
+            NEW.score,
+            OLD.score,
+            NEW.status,
+            OLD.status
+        );
+
+        -- change account statuses
+        IF NEW.status != OLD.status THEN
+
+            -- decrease old status count
+            IF OLD.status = 'completed' THEN
+                UPDATE account
+                SET account.completed_count = account.completed_count - 1
+                WHERE OLD.account_id = account.account_id;
+            ELSEIF OLD.status = 'dropped' THEN
+                UPDATE account
+                SET account.dropped_count = account.dropped_count - 1
+                WHERE OLD.account_id = account.account_id;
+            ELSEIF OLD.status = 'plan to watch' THEN
+                UPDATE account
+                SET account.plan_to_watch_count = account.plan_to_watch_count - 1
+                WHERE OLD.account_id = account.account_id;
+            ELSEIF OLD.status = 'watching' THEN
+                UPDATE account
+                SET account.watching_count = account.watching_count - 1
+                WHERE OLD.account_id = account.account_id;
+            ELSEIF OLD.status = 'on hold' THEN
+                UPDATE account
+                SET account.on_hold_count = account.on_hold_count - 1
+                WHERE OLD.account_id = account.account_id;
+            END IF;
+
+            -- increase new status count
+            IF NEW.status = 'completed' THEN
+                UPDATE account
+                SET account.completed_count = account.completed_count + 1
+                WHERE NEW.account_id = account.account_id;
+            ELSEIF NEW.status = 'dropped' THEN
+                UPDATE account
+                SET account.dropped_count = account.dropped_count + 1
+                WHERE NEW.account_id = account.account_id;
+            ELSEIF NEW.status = 'plan to watch' THEN
+                UPDATE account
+                SET account.plan_to_watch_count = account.plan_to_watch_count + 1
+                WHERE NEW.account_id = account.account_id;
+            ELSEIF NEW.status = 'watching' THEN
+                UPDATE account
+                SET account.watching_count = account.watching_count + 1
+                WHERE NEW.account_id = account.account_id;
+            ELSEIF NEW.status = 'on hold' THEN
+                UPDATE account
+                SET account.on_hold_count = account.on_hold_count + 1
+                WHERE NEW.account_id = account.account_id;
+            END IF;
+        END IF;
+
+        -- change account avg score
+        IF NEW.score != OLD.score THEN
+            -- set all watched count
+            UPDATE account
+            SET all_watched = dropped_count + completed_count
+            WHERE OLD.account_id = account.account_id;
+
+
+            -- set avg score
+            UPDATE account
+            SET account.avg_score = calculate_score(NEW.score, OLD.score, account.avg_score, all_watched, 'update')
+            WHERE NEW.account_id = account.account_id;
         END IF;
     END//
 DELIMITER ;
@@ -280,23 +369,3 @@ DELIMITER //
 DELIMITER ;
 
 
-DELIMITER //
-    -- update list
-    DROP TRIGGER IF EXISTS update_list
-
-    CREATE TRIGGER update_list
-    AFTER UPDATE ON list
-    FOR EACH ROW
-    BEGIN
-        -- save log
-        INSERT INTO log_list(log_status, anime_id, new_score, old_score, new_status, old_status)
-        VALUES(
-            'update',
-            NEW.anime_id,
-            NEW.score,
-            OLD.score,
-            NEW.status,
-            OLD.status
-        );
-    END//
-DELIMITER ;
