@@ -120,7 +120,7 @@ DELIMITER //
         );
 
         -- update account information
-        CALL change_account_status('increase', NEW.status, NEW.account_id)
+        CALL change_account_status('increase', NEW.status, NEW.account_id);
 
         -- update account avg score
         IF NEW.status = 'completed' OR NEW.status = 'dropped' THEN
@@ -162,7 +162,7 @@ DELIMITER //
         );
 
         -- update account information
-        CALL change_account_status('decrease', OLD.status, OLD.account_id)
+        CALL change_account_status('decrease', OLD.status, OLD.account_id);
 
         -- update account avg score
         IF OLD.status = 'completed' OR OLD.status = 'dropped' THEN
@@ -210,10 +210,10 @@ DELIMITER //
         IF NEW.status != OLD.status THEN
 
             -- decrease old status count
-            CALL change_account_status('decrease', OLD.status, OLD.account_id)
+            CALL change_account_status('decrease', OLD.status, OLD.account_id);
 
             -- increase new status count
-            CALL change_account_status('increase', NEW.status, NEW.account_id)
+            CALL change_account_status('increase', NEW.status, NEW.account_id);
         END IF;
 
         -- change account avg score
