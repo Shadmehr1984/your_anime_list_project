@@ -115,10 +115,8 @@ DELIMITER //
         VALUES(
             'insert',
             NEW.anime_id,
-            NEW.account_id,
             NEW.score,
             NEW.status,
-            NEW.episodes_watched
         );
 
         -- update account information
@@ -179,10 +177,8 @@ DELIMITER //
         VALUES(
             'delete',
             OLD.anime_id,
-            OLD.account_id,
             OLD.score,
             OLD.status,
-            OLD.episodes_watched
         );
 
         -- update account information
@@ -229,6 +225,7 @@ DELIMITER ;
 
 
 DELIMITER //
+    -- delete account
     DROP TRIGGER IF EXISTS delete_account;
 
     CREATE TRIGGER delete_account
@@ -280,4 +277,26 @@ DELIMITER //
 		SET anime.on_hold_count = anime.on_hold_count - 1
 		WHERE account_list.status = 'on hold';
     END//
-DELIMITER ; 
+DELIMITER ;
+
+
+DELIMITER //
+    -- update list
+    DROP TRIGGER IF EXISTS update_list
+
+    CREATE TRIGGER update_list
+    AFTER UPDATE ON list
+    FOR EACH ROW
+    BEGIN
+        -- save log
+        INSERT INTO log_list(log_status, anime_id, new_score, old_score, new_status, old_status)
+        VALUES(
+            'update',
+            NEW.anime_id,
+            NEW.score,
+            OLD.score,
+            NEW.status,
+            OLD.status
+        );
+    END//
+DELIMITER ;
