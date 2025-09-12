@@ -29,6 +29,27 @@ DELIMITER ;
 
 
 DELIMITER //
+    -- save studio detail change(update)
+    DROP TRIGGER IF EXISTS update_studio_detail_update;
+
+    CREATE TRIGGER update_studio_detail_update
+    AFTER UPDATE ON anime_production_studio
+    FOR EACH ROW
+    BEGIN
+        IF NEW.studio_id != OLD.studio_id THEN
+            UPDATE studio
+            SET product_number = product_number - 1
+            WHERE studio_id = OLD.studio_id;
+
+            UPDATE studio
+            SET product_number = product_number + 1
+            WHERE studio_id = NEW.studio_id;
+        END IF;
+    END//
+DELIMITER ;
+
+
+DELIMITER //
     -- save genres detail change(insert)
     DROP TRIGGER IF EXISTS update_genre_detail_insert;
 
@@ -54,6 +75,27 @@ DELIMITER //
         UPDATE genre
         SET anime_numbers = anime_numbers - 1
         WHERE anime_genres.genre_id = genre.genre_id;
+    END//
+DELIMITER ;
+
+
+DELIMITER //
+    -- save genres detail change(update)
+    DROP TRIGGER IF EXISTS update_genre_detail_update;
+
+    CREATE TRIGGER update_genre_detail_update
+    AFTER UPDATE ON anime_genres
+    FOR EACH ROW
+    BEGIN
+        IF NEW.genre_id != OLD.genre_id THEN
+            UPDATE genre
+            SET anime_numbers = anime_numbers - 1
+            WHERE genre_id = OLD.genre_id;
+
+            UPDATE genre
+            SET anime_numbers = anime_numbers + 1
+            WHERE genre_id = NEW.genre_id;
+        END IF;
     END//
 DELIMITER ;
 
