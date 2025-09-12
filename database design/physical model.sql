@@ -64,13 +64,14 @@ CREATE TABLE IF NOT EXISTS list(
 );
 
 CREATE TABLE IF NOT EXISTS log_list(
+    log_id INT PRIMARY KEY AUTO_INCREMENT.
     log_status ENUM('insert', 'delete', 'update') NOT NULL,
-    anime_id INT PRIMARY KEY,
-    account_id INT PRIMARY KEY,
+    anime_id INT NOT NULL,
     FOREIGN KEY(anime_id) REFERENCES anime(anime_id) ON DELETE CASCADE,
-    FOREIGN KEY(account_id) REFERENCES account(account_id) ON DELETE CASCADE,
-    score FLOAT(4, 2) NOT NULL DEFAULT 0,
-    CONSTRAINT score_range CHECK (score BETWEEN 10.0 AND 0.0),
-    status ENUM('plan to watch', 'completed', 'dropped', 'on hold', 'watching'),
-    episodes_watched INT DEFAULT 0
+    new_score FLOAT(4, 2) DEFAULT 0,
+    old_score FLOAT(4, 2) DEFAULT 0,
+    CONSTRAINT score_range CHECK (new_score BETWEEN 10.0 AND 0.0),
+    CONSTRAINT score_range CHECK (old_score BETWEEN 10.0 AND 0.0),
+    old_status ENUM('plan to watch', 'completed', 'dropped', 'on hold', 'watching'),
+    new_status ENUM('plan to watch', 'completed', 'dropped', 'on hold', 'watching')
 );
