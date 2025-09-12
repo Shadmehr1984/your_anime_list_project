@@ -120,27 +120,7 @@ DELIMITER //
         );
 
         -- update account information
-        IF NEW.status = 'completed' THEN
-            UPDATE account
-            SET account.completed_count = account.completed_count + 1
-            WHERE NEW.account_id = account.account_id;
-        ELSEIF NEW.status = 'dropped' THEN
-            UPDATE account
-            SET account.dropped_count = account.dropped_count + 1
-            WHERE NEW.account_id = account.account_id;
-        ELSEIF NEW.status = 'plan to watch' THEN
-            UPDATE account
-            SET account.plan_to_watch_count = account.plan_to_watch_count + 1
-            WHERE NEW.account_id = account.account_id;
-        ELSEIF NEW.status = 'watching' THEN
-            UPDATE account
-            SET account.watching_count = account.watching_count + 1
-            WHERE NEW.account_id = account.account_id;
-        ELSEIF NEW.status = 'on hold' THEN
-            UPDATE account
-            SET account.on_hold_count = account.on_hold_count + 1
-            WHERE NEW.account_id = account.account_id;
-        END IF;
+        CALL change_account_status('increase', NEW.status, NEW.account_id)
 
         -- update account avg score
         IF NEW.status = 'completed' OR NEW.status = 'dropped' THEN
@@ -182,27 +162,7 @@ DELIMITER //
         );
 
         -- update account information
-        IF OLD.status = 'completed' THEN
-            UPDATE account
-            SET account.completed_count = account.completed_count - 1
-            WHERE OLD.account_id = account.account_id;
-        ELSEIF OLD.status = 'dropped' THEN
-            UPDATE account
-            SET account.dropped_count = account.dropped_count - 1
-            WHERE OLD.account_id = account.account_id;
-        ELSEIF OLD.status = 'plan to watch' THEN
-            UPDATE account
-            SET account.plan_to_watch_count = account.plan_to_watch_count - 1
-            WHERE OLD.account_id = account.account_id;
-        ELSEIF OLD.status = 'watching' THEN
-            UPDATE account
-            SET account.watching_count = account.watching_count - 1
-            WHERE OLD.account_id = account.account_id;
-        ELSEIF OLD.status = 'on hold' THEN
-            UPDATE account
-            SET account.on_hold_count = account.on_hold_count - 1
-            WHERE OLD.account_id = account.account_id;
-        END IF;
+        CALL change_account_status('decrease', OLD.status, OLD.account_id)
 
         -- update account avg score
         IF OLD.status = 'completed' OR OLD.status = 'dropped' THEN
@@ -250,50 +210,10 @@ DELIMITER //
         IF NEW.status != OLD.status THEN
 
             -- decrease old status count
-            IF OLD.status = 'completed' THEN
-                UPDATE account
-                SET account.completed_count = account.completed_count - 1
-                WHERE OLD.account_id = account.account_id;
-            ELSEIF OLD.status = 'dropped' THEN
-                UPDATE account
-                SET account.dropped_count = account.dropped_count - 1
-                WHERE OLD.account_id = account.account_id;
-            ELSEIF OLD.status = 'plan to watch' THEN
-                UPDATE account
-                SET account.plan_to_watch_count = account.plan_to_watch_count - 1
-                WHERE OLD.account_id = account.account_id;
-            ELSEIF OLD.status = 'watching' THEN
-                UPDATE account
-                SET account.watching_count = account.watching_count - 1
-                WHERE OLD.account_id = account.account_id;
-            ELSEIF OLD.status = 'on hold' THEN
-                UPDATE account
-                SET account.on_hold_count = account.on_hold_count - 1
-                WHERE OLD.account_id = account.account_id;
-            END IF;
+            CALL change_account_status('decrease', OLD.status, OLD.account_id)
 
             -- increase new status count
-            IF NEW.status = 'completed' THEN
-                UPDATE account
-                SET account.completed_count = account.completed_count + 1
-                WHERE NEW.account_id = account.account_id;
-            ELSEIF NEW.status = 'dropped' THEN
-                UPDATE account
-                SET account.dropped_count = account.dropped_count + 1
-                WHERE NEW.account_id = account.account_id;
-            ELSEIF NEW.status = 'plan to watch' THEN
-                UPDATE account
-                SET account.plan_to_watch_count = account.plan_to_watch_count + 1
-                WHERE NEW.account_id = account.account_id;
-            ELSEIF NEW.status = 'watching' THEN
-                UPDATE account
-                SET account.watching_count = account.watching_count + 1
-                WHERE NEW.account_id = account.account_id;
-            ELSEIF NEW.status = 'on hold' THEN
-                UPDATE account
-                SET account.on_hold_count = account.on_hold_count + 1
-                WHERE NEW.account_id = account.account_id;
-            END IF;
+            CALL change_account_status('increase', NEW.status, NEW.account_id)
         END IF;
 
         -- change account avg score
