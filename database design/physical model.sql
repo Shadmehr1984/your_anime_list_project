@@ -72,6 +72,6 @@ CREATE TABLE IF NOT EXISTS log_list(
     old_score FLOAT(4, 2) DEFAULT 0,
     CONSTRAINT score_range CHECK (new_score BETWEEN 10.0 AND 0.0),
     CONSTRAINT score_range CHECK (old_score BETWEEN 10.0 AND 0.0),
-    old_status ENUM('plan to watch', 'completed', 'dropped', 'on hold', 'watching'),
-    new_status ENUM('plan to watch', 'completed', 'dropped', 'on hold', 'watching')
+    new_status ENUM('plan to watch', 'completed', 'dropped', 'on hold', 'watching'),
+    old_status ENUM('plan to watch', 'completed', 'dropped', 'on hold', 'watching')
 );
