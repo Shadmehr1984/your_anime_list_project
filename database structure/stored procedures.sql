@@ -85,14 +85,14 @@ DELIMITER //
         ALTER TABLE anime_changes
         ADD COLUMN watching_changes INT DEFAULT 0;
 
-        --save changes in anime_changes table
+        -- save changes in anime_changes table
 
         -- save insert and update changes
         UPDATE anime_changes
         SET score_changes = score_changes + new_score
         WHERE anime_changes.anime_id = log_list.anime_id
-        AND log_list.log_status IN ('insert', 'update');
-        AND log_list.new_status IN ('completed', 'dropped')
+        AND log_list.log_status IN ('insert', 'update')
+        AND log_list.new_status IN ('completed', 'dropped');
 
         UPDATE anime_changes
         SET plan_to_watch_changes = plan_to_watch_changes + 1
@@ -124,12 +124,12 @@ DELIMITER //
         AND log_list.new_status = 'watching'
         AND log_list.log_status IN ('insert', 'update');
 
-        --save delete and update changes
+        -- save delete and update changes
         UPDATE anime_changes
         SET score_changes = score_changes - new_score
         WHERE anime_changes.anime_id = log_list.anime_id
-        AND log_list.log_status IN ('delete', 'update');
-        AND log_list.old_status IN ('completed', 'dropped')
+        AND log_list.log_status IN ('delete', 'update')
+        AND log_list.old_status IN ('completed', 'dropped');
 
         UPDATE anime_changes
         SET plan_to_watch_changes = plan_to_watch_changes - 1
@@ -161,16 +161,16 @@ DELIMITER //
         AND log_list.old_status = 'watching'
         AND log_list.log_status IN ('delete', 'update');
 
-        --update animes changes
+        -- update animes changes
 
-        --set new score
+        -- set new score
         UPDATE anime
         SET anime.score =
         ((anime.score * (anime.completed_count + anime.dropped_count)) + anime_changes.score_changes) / (anime.completed_count + anime_changes.completed_changes + anime.dropped_count + anime_changes.dropped_changes)
         WHERE anime.anime_id = anime_changes.anime_id 
         AND anime_changes.score_changes != 0;
 
-        --set new status count
+        -- set new status count
         UPDATE anime
         SET anime.plan_to_watch_count = anime.plan_to_watch_count + anime_changes.plan_to_watch_changes
         WHERE anime.anime_id = anime_changes.anime_id
@@ -195,5 +195,8 @@ DELIMITER //
         SET anime.watching_count = anime.watching_count + anime_changes.watching_changes
         WHERE anime.anime_id = anime_changes.anime_id
         AND anime_changes.watching_changes != 0;
+
+        -- clear log_list table
+        TRUNCATE log_list;
     END //
 DELIMITER ;
