@@ -1,6 +1,6 @@
 DELIMITER //
     -- changing account status
-    DROP PROCEDURE IF EXISTS change_account_status;
+    DROP PROCEDURE IF EXISTS change_account_status //
 
     CREATE PROCEDURE change_account_status(
                                             status_of_change ENUM('increase', 'decrease'),
@@ -61,7 +61,7 @@ DELIMITER ;
 
 DELIMITER //
     -- change all anime have been changed
-    DROP PROCEDURE IF EXISTS calculate_and_clear_log_list;
+    DROP PROCEDURE IF EXISTS calculate_and_clear_log_list //
 
     CREATE PROCEDURE calculate_and_clear_log_list()
     BEGIN

@@ -1,6 +1,6 @@
 DELIMITER //
     -- save studio detail change(insert)
-    DROP TRIGGER IF EXISTS update_studio_detail_insert;
+    DROP TRIGGER IF EXISTS update_studio_detail_insert //
 
     CREATE TRIGGER update_studio_detail_insert
     AFTER INSERT ON anime_production_studio
@@ -15,7 +15,7 @@ DELIMITER ;
 
 DELIMITER //
     -- save studio detail change(delete)
-    DROP TRIGGER IF EXISTS update_studio_detail_delete;
+    DROP TRIGGER IF EXISTS update_studio_detail_delete //
 
     CREATE TRIGGER update_studio_detail_delete
     AFTER DELETE ON anime_production_studio
@@ -30,7 +30,7 @@ DELIMITER ;
 
 DELIMITER //
     -- save studio detail change(update)
-    DROP TRIGGER IF EXISTS update_studio_detail_update;
+    DROP TRIGGER IF EXISTS update_studio_detail_update //
 
     CREATE TRIGGER update_studio_detail_update
     AFTER UPDATE ON anime_production_studio
@@ -51,7 +51,7 @@ DELIMITER ;
 
 DELIMITER //
     -- save genres detail change(insert)
-    DROP TRIGGER IF EXISTS update_genre_detail_insert;
+    DROP TRIGGER IF EXISTS update_genre_detail_insert //
 
     CREATE TRIGGER update_genre_detail_insert
     AFTER INSERT ON anime_genres
@@ -66,7 +66,7 @@ DELIMITER ;
 
 DELIMITER //
     -- save genres detail change(delete)
-    DROP TRIGGER IF EXISTS update_genre_detail_delete;
+    DROP TRIGGER IF EXISTS update_genre_detail_delete //
 
     CREATE TRIGGER update_genre_detail_delete
     AFTER DELETE ON anime_genres
@@ -81,7 +81,7 @@ DELIMITER ;
 
 DELIMITER //
     -- save genres detail change(update)
-    DROP TRIGGER IF EXISTS update_genre_detail_update;
+    DROP TRIGGER IF EXISTS update_genre_detail_update //
 
     CREATE TRIGGER update_genre_detail_update
     AFTER UPDATE ON anime_genres
@@ -102,7 +102,7 @@ DELIMITER ;
 
 DELIMITER //
     -- add to list
-    DROP TRIGGER IF EXISTS insert_to_list;
+    DROP TRIGGER IF EXISTS insert_to_list //
 
     CREATE TRIGGER insert_to_list
     AFTER INSERT ON list
@@ -116,7 +116,7 @@ DELIMITER //
             'insert',
             NEW.anime_id,
             NEW.score,
-            NEW.status,
+            NEW.status
         );
 
         -- update account information
@@ -144,7 +144,7 @@ DELIMITER ;
 
 DELIMITER //
     -- remove from list
-    DROP TRIGGER IF EXISTS delete_from_list;
+    DROP TRIGGER IF EXISTS delete_from_list //
 
     CREATE TRIGGER delete_from_list
     AFTER DELETE ON list
@@ -158,7 +158,7 @@ DELIMITER //
             'delete',
             OLD.anime_id,
             OLD.score,
-            OLD.status,
+            OLD.status
         );
 
         -- update account information
@@ -186,7 +186,7 @@ DELIMITER ;
 
 DELIMITER //
     -- update list
-    DROP TRIGGER IF EXISTS update_list;
+    DROP TRIGGER IF EXISTS update_list //
 
     CREATE TRIGGER update_list
     AFTER UPDATE ON list
@@ -235,7 +235,7 @@ DELIMITER ;
 
 DELIMITER //
     -- delete account
-    DROP TRIGGER IF EXISTS delete_account;
+    DROP TRIGGER IF EXISTS delete_account //
 
     CREATE TRIGGER delete_account
     BEFORE DELETE ON account
