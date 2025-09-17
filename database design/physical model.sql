@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS list(
 );
 
 CREATE TABLE IF NOT EXISTS log_list(
-    log_id INT PRIMARY KEY AUTO_INCREMENT.
+    log_id INT PRIMARY KEY AUTO_INCREMENT,
     log_status ENUM('insert', 'delete', 'update') NOT NULL,
     anime_id INT NOT NULL,
     FOREIGN KEY(anime_id) REFERENCES anime(anime_id) ON DELETE CASCADE,
