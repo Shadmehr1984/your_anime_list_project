@@ -8,7 +8,7 @@ DELIMITER //
     BEGIN
         UPDATE studio
         SET product_number = product_number + 1
-        WHERE studio.studio_id = anime_production_studio.studio_id;
+        WHERE studio.studio_id = NEW.studio_id;
     END//
 DELIMITER ;
 
@@ -23,7 +23,7 @@ DELIMITER //
     BEGIN
         UPDATE studio
         SET product_number = product_number - 1
-        WHERE studio.studio_id = anime_production_studio.studio_id;
+        WHERE studio.studio_id = OLD.studio_id;
     END//
 DELIMITER ;
 
@@ -59,7 +59,7 @@ DELIMITER //
     BEGIN
         UPDATE genre
         SET anime_numbers = anime_numbers + 1
-        WHERE anime_genres.genre_id = genre.genre_id;
+        WHERE NEW.genre_id = genre.genre_id;
     END//
 DELIMITER ;
 
@@ -74,7 +74,7 @@ DELIMITER //
     BEGIN
         UPDATE genre
         SET anime_numbers = anime_numbers - 1
-        WHERE anime_genres.genre_id = genre.genre_id;
+        WHERE OLD.genre_id = genre.genre_id;
     END//
 DELIMITER ;
 

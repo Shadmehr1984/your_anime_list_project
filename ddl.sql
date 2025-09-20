@@ -4,7 +4,7 @@ CREATE DATABASE IF NOT EXISTS your_anime_list;
 
 USE your_anime_list;
 
--- tables
+#!tables
 DROP TABLE IF EXISTS account;
 CREATE TABLE IF NOT EXISTS account(
     account_id INT PRIMARY KEY,
@@ -94,7 +94,8 @@ CREATE TABLE IF NOT EXISTS log_list(
     old_status ENUM('plan to watch', 'completed', 'dropped', 'on hold', 'watching')
 );
 
--- functions
+
+#!functions
 
 
 DELIMITER //
@@ -123,7 +124,8 @@ END//
 
 DELIMITER ;
 
--- triggers
+
+#!triggers
 
 
 DELIMITER //
@@ -136,7 +138,7 @@ DELIMITER //
     BEGIN
         UPDATE studio
         SET product_number = product_number + 1
-        WHERE studio.studio_id = anime_production_studio.studio_id;
+        WHERE studio.studio_id = NEW.studio_id;
     END//
 DELIMITER ;
 
@@ -151,7 +153,7 @@ DELIMITER //
     BEGIN
         UPDATE studio
         SET product_number = product_number - 1
-        WHERE studio.studio_id = anime_production_studio.studio_id;
+        WHERE studio.studio_id = OLD.studio_id;
     END//
 DELIMITER ;
 
@@ -187,7 +189,7 @@ DELIMITER //
     BEGIN
         UPDATE genre
         SET anime_numbers = anime_numbers + 1
-        WHERE anime_genres.genre_id = genre.genre_id;
+        WHERE NEW.genre_id = genre.genre_id;
     END//
 DELIMITER ;
 
@@ -202,7 +204,7 @@ DELIMITER //
     BEGIN
         UPDATE genre
         SET anime_numbers = anime_numbers - 1
-        WHERE anime_genres.genre_id = genre.genre_id;
+        WHERE OLD.genre_id = genre.genre_id;
     END//
 DELIMITER ;
 
@@ -417,7 +419,8 @@ DELIMITER //
 DELIMITER ;
 
 
--- stored procedures
+#!stored procedures
+
 
 DELIMITER //
     -- changing account status
@@ -623,7 +626,7 @@ DELIMITER //
 DELIMITER ;
 
 
--- events
+#!events
 
 
 -- create event for clear log_list every 10 minute
