@@ -3,7 +3,7 @@ from typeguard import typechecked
 
 # take __password from txt file
 __password: str
-with open('mysql root __password.txt') as file:
+with open('mysql root password.txt') as file:
     __password = file.readline()
 
 #connect to root user
@@ -11,6 +11,7 @@ root = mysql.connector.connect(
     host='127.0.0.1',
     port=3306,
     user='root',
+    database='your_anime_list',
     password=__password,
     use_pure=True
 )
@@ -18,7 +19,11 @@ root = mysql.connector.connect(
 #create cursor
 __cursor = root.cursor()
 
-#!functions
+#define a method for get cursor
+def get_cursor():
+    return __cursor
+
+#!database functions
 
 #define a method for insert new genre
 @typechecked
@@ -28,7 +33,7 @@ def insert_genre(genre_id: int, genre_name: str) -> bool:
         raise TypeError("invalid genre_id")
     
     #insert data
-    __cursor.execute(f"INSERT INTO genre VALUES({genre_id}, {genre_name}, DEFAULT)")
+    __cursor.execute(f"INSERT INTO genre VALUES({genre_id}, '{genre_name}', DEFAULT)")
     
     #check insert
     __cursor.execute(f"SELECT * FROM genre WHERE genre_id = {genre_id}")
@@ -39,7 +44,7 @@ def insert_genre(genre_id: int, genre_name: str) -> bool:
 
 #define a method for save anime genres
 @typechecked
-def insert_anime_genres(anime_id: int, genre_id) -> bool:
+def insert_anime_genres(anime_id: int, genre_id: int) -> bool:
     #check valid input
     if anime_id < 0:
         raise TypeError("invalid anime_id")
@@ -47,12 +52,12 @@ def insert_anime_genres(anime_id: int, genre_id) -> bool:
         raise TypeError("invalid genre_id")
     
     #insert data
-    __cursor.execute(f"INSERT INTO anime_genres VALUES({anime_id}, {genre_id}, DEFAULT)")
+    __cursor.execute(f"INSERT INTO anime_genres VALUES({anime_id}, {genre_id})")
     
     #check insert
     __cursor.execute(f"SELECT * FROM anime_genres WHERE anime_id = {anime_id} AND genre_id = {genre_id}")
     
-    inputs: tuple = (anime_id, genre_id, 0)
+    inputs: tuple = (anime_id, genre_id)
     
     return inputs == __cursor.fetchone()
 
@@ -83,7 +88,7 @@ def insert_studio(studio_id: int, studio_name: str) -> bool:
         raise TypeError("invalid studio_id")
     
     #insert data
-    __cursor.execute(f"INSERT INTO studio VALUES({studio_id}, {studio_name}, DEFAULT)")
+    __cursor.execute(f"INSERT INTO studio VALUES({studio_id}, '{studio_name}', DEFAULT)")
     
     #check insert
     __cursor.execute(f"SELECT * FROM studio WHERE studio_id = {studio_id}")
@@ -111,7 +116,7 @@ def insert_anime(anime_id: int,
         raise TypeError("invalid season")
     
     #insert data
-    __cursor.execute(f"INSERT INTO anime VALUES({anime_id}, {anime_name}, {anime_status}, DEFAULT, {episodes}, {year}, {season}, {avg_episode_time}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
+    __cursor.execute(f"INSERT INTO anime VALUES({anime_id}, '{anime_name}', '{anime_status}', DEFAULT, {episodes}, '{year}', '{season}', {avg_episode_time}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
     
     #check insert
     __cursor.execute(f"SELECT * FROM anime WHERE anime_id = {anime_id}")
@@ -128,7 +133,7 @@ def insert_account(account_id: int, user_name: str) -> bool:
         raise TypeError("invalid account_id")
     
     #insert data
-    __cursor.execute(f"INSERT INTO account VALUES({account_id}, {user_name}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
+    __cursor.execute(f"INSERT INTO account VALUES({account_id}, '{user_name}', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
     
     #check insert
     __cursor.execute(f"SELECT * FROM account WHERE account_id = {account_id}")
@@ -153,7 +158,7 @@ def insert_to_list(anime_id: int, account_id: int, score: float, status: str, ep
         raise TypeError("invalid episodes number")
     
     #insert data
-    __cursor.execute(f"INSERT INTO list VALUES({anime_id}, {account_id}, {score}, {status}, {episodes_watched})")
+    __cursor.execute(f"INSERT INTO list VALUES({anime_id}, {account_id}, {score}, '{status}', {episodes_watched})")
     
     #check insert
     __cursor.execute(f"SELECT * FROM list WHERE anime_id = {anime_id} AND account_id = {account_id}")
