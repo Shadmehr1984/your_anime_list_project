@@ -1,9 +1,14 @@
 import data_handling
-import pytest
+import database_manager
+from typeguard import TypeCheckError
 import json
+import pytest
 
+
+#test data_handling module
 class test_data_handling:
     
+    #test get_anime_info method
     def test_get_anime_info(self):
         #normal using test
         data_handling.get_anime_info(1, False)
@@ -26,6 +31,7 @@ class test_data_handling:
         
         assert True
 
+    #test get_user_list method
     def test_get_user_list(self):
         #simple test
         data_handling.get_user_list('ssszzzast', False)
@@ -46,6 +52,7 @@ class test_data_handling:
         
         assert True
     
+    #test get_seasonal_animes method
     def test_get_seasonal_animes(self):
         #simple test
         data_handling.get_seasonal_animes('winter', 2024, False)
@@ -73,3 +80,65 @@ class test_data_handling:
             assert dic == json.load(file)
         
         assert True
+
+#test database_manager module
+class test_database_manager:
+    cursor = database_manager.get_cursor()
+
+    #test insert_genre method
+    def test_insert_genre(self):
+        #simple test
+        database_manager.insert_genre(13, 'action')
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_genre('an1', 'an2')
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_genre('an1', 5)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_genre(12.1, 'an2')
+        with pytest.raises(TypeError):
+            database_manager.insert_genre(-16, 'an2')
+        
+        #insert test
+        database_manager.insert_genre(45, 'isekai')
+        self.cursor.execute("SELECT * FROM genre WHERE genre_id = 45")
+        new_genre: tuple = (45, 'isekai', 0)
+        assert new_genre == self.cursor.fetchone()
+        
+        #clear table
+        self.cursor.execute("DELETE FROM genre")
+    
+    #test insert_anime_genres
+    def test_insert_anime_genres(self):
+        # off foreign key check
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
+        
+        #simple test
+        database_manager.insert_anime_genres(12, 45)
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_anime_genres(1.1, 5)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_anime_genres(1, 5.9)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_anime_genres("str", 5)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_anime_genres(1, '5')
+        with pytest.raises(TypeError):
+            database_manager.insert_anime_genres(-45, 5)
+        with pytest.raises(TypeError):
+            database_manager.insert_anime_genres(11, -5)
+        
+        #insert test
+        database_manager.insert_anime_genres(13, 46)
+        self.cursor.execute("SELECT * FROM anime_genres WHERE anime_id = 13 AND genre_id = 46")
+        new_anime_genres: tuple = (13, 46)
+        assert new_anime_genres == self.cursor.fetchone()
+        
+        #clear table
+        self.cursor.execute("DELETE FROM anime_genres")
+        
+        # on foreign key check
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
