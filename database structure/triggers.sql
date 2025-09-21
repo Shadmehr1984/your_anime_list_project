@@ -124,9 +124,7 @@ DELIMITER //
 
         -- update account avg score
         IF NEW.status = 'completed' OR NEW.status = 'dropped' THEN
-            UPDATE account
-            SET all_watched = dropped_count + completed_count
-            WHERE NEW.account_id = account.account_id;
+            SET all_watched = (SELECT completed_count + dropped_count FROM account WHERE NEW.account_id = account.account_id);
 
             IF all_watched = 1 THEN
                 UPDATE account
@@ -166,9 +164,7 @@ DELIMITER //
 
         -- update account avg score
         IF OLD.status = 'completed' OR OLD.status = 'dropped' THEN
-            UPDATE account
-            SET all_watched = dropped_count + completed_count
-            WHERE OLD.account_id = account.account_id;
+            SET all_watched = (SELECT completed_count + dropped_count FROM account WHERE OLD.account_id = account.account_id);
 
             IF all_watched = 0 THEN
                 UPDATE account
@@ -219,9 +215,7 @@ DELIMITER //
         -- change account avg score
         IF NEW.score != OLD.score THEN
             -- set all watched count
-            UPDATE account
-            SET all_watched = dropped_count + completed_count
-            WHERE OLD.account_id = account.account_id;
+            SET all_watched = (SELECT completed_count + dropped_count FROM account WHERE OLD.account_id = account.account_id);
 
 
             -- set avg score
