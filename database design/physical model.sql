@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS anime(
     score FLOAT(4, 2) NOT NULL DEFAULT 0,
     CONSTRAINT score_range_anime_table CHECK (score BETWEEN 10.0 AND 0.0),
     episodes INT DEFAULT 0,
-    year DATE NOT NULL,
+    year YEAR NOT NULL,
     season ENUM('spring', 'summer', 'fall', 'winter') NOT NULL,
     avg_episodes_time INT NOT NULL,
     plan_to_watch_count INT DEFAULT 0,
