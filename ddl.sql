@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS anime(
     anime_name VARCHAR(100) NOT NULL,
     anime_status ENUM('currently_airing', 'not_yet_aired', 'finished_airing') NOT NULL,
     score FLOAT(4, 2) NOT NULL DEFAULT 0,
-    CONSTRAINT score_range_anime_table CHECK (score BETWEEN 10.0 AND 0.0),
+    CONSTRAINT score_range_anime_table CHECK (score>=0 AND score<=10),
     episodes INT DEFAULT 0,
     year YEAR NOT NULL,
     season ENUM('spring', 'summer', 'fall', 'winter') NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS list(
     FOREIGN KEY(anime_id) REFERENCES anime(anime_id) ON DELETE CASCADE,
     FOREIGN KEY(account_id) REFERENCES account(account_id) ON DELETE CASCADE,
     score FLOAT(4, 2) NOT NULL DEFAULT 0,
-    CONSTRAINT score_range_list_table CHECK (score BETWEEN 10.0 AND 0.0),
+    CONSTRAINT score_range_list_table CHECK (score>=0 AND score<=10),
     status ENUM('plan to watch', 'completed', 'dropped', 'on hold', 'watching'),
     episodes_watched INT DEFAULT 0
 );
@@ -88,8 +88,8 @@ CREATE TABLE IF NOT EXISTS log_list(
     FOREIGN KEY(anime_id) REFERENCES anime(anime_id) ON DELETE CASCADE,
     new_score FLOAT(4, 2) DEFAULT 0,
     old_score FLOAT(4, 2) DEFAULT 0,
-    CONSTRAINT new_score_range_log_list_table CHECK (new_score BETWEEN 10.0 AND 0.0),
-    CONSTRAINT old_score_range_log_list_table CHECK (old_score BETWEEN 10.0 AND 0.0),
+    CONSTRAINT new_score_range_log_list_table CHECK (new_score>=0 AND new_score<=10),
+    CONSTRAINT old_score_range_log_list_table CHECK (old_score>=0 AND old_score<=10),
     new_status ENUM('plan to watch', 'completed', 'dropped', 'on hold', 'watching'),
     old_status ENUM('plan to watch', 'completed', 'dropped', 'on hold', 'watching')
 );
