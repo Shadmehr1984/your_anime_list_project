@@ -267,3 +267,77 @@ class test_database_manager:
         #clear table
         self.cursor.execute("DELETE FROM anime")
         self.cursor.execute("COMMIT;")
+    
+    #test insert_account method
+    def test_insert_account(self):
+        #clear table
+        self.cursor.execute("DELETE FROM account")
+        self.cursor.execute("COMMIT;")
+        
+        #simple test
+        database_manager.insert_account(456, 'colorFull_woman')
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_account('123', 'kir2025')
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_account(123, 2025)
+        with pytest.raises(TypeError):
+            database_manager.insert_account(-123, 'kir2025')
+        
+        #insert test
+        database_manager.insert_account(999, "mobMaster69")
+        self.cursor.execute("SELECT * FROM account WHERE account_id = 999")
+        inputs: tuple = (999, "mobMaster69", 0, 0, 0, 0, 0, 0)
+        assert inputs == self.cursor.fetchone()
+        
+        #clear table
+        self.cursor.execute("DELETE FROM account")
+        self.cursor.execute("COMMIT;")
+    
+    #test insert_to_list method
+    def test_insert_to_list(self):
+        #off foreign key check
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
+
+        #clear table
+        self.cursor.execute("DELETE FROM list")
+        self.cursor.execute("COMMIT;")
+        
+        #simple test
+        database_manager.insert_to_list(12, 5858, 9, 'completed', 5)
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_to_list('66', 9119, 8, 'on hold', 11)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_to_list(66, 9119.9, 8, 'on hold', 11)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_to_list(66, 9119, 8, 8.8, 11)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_to_list(66, 9119, 8, 'on hold', '11')
+        with pytest.raises(TypeError):
+            database_manager.insert_to_list(-66, 9119, 8, 'on hold', 11)
+        with pytest.raises(TypeError):
+            database_manager.insert_to_list(66, -9119, 8, 'on hold', 11)
+        with pytest.raises(TypeError):
+            database_manager.insert_to_list(66, 9119, -2, 'on hold', 11)
+        with pytest.raises(TypeError):
+            database_manager.insert_to_list(66, 9119, 18, 'on hold', 11)
+        with pytest.raises(TypeError):
+            database_manager.insert_to_list(66, 9119, 8, 'on holding', 11)
+        with pytest.raises(TypeError):
+            database_manager.insert_to_list(66, 9119, 8, 'on hold', -111)
+        
+        #insert test
+        database_manager.insert_to_list(14, 3693, 5, 'dropped', 12)
+        self.cursor.execute("SELECT * FROM list WHERE anime_id = 14 AND account_id = 3693")
+        inputs: tuple = (14, 3693, 5, 'dropped', 12)
+        assert inputs == self.cursor.fetchone()
+        
+        #clear table
+        self.cursor.execute("DELETE FROM list")
+        self.cursor.execute("COMMIT;")
+        
+        #on foreign key check
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
