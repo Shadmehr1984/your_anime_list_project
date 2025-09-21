@@ -107,15 +107,17 @@ def insert_anime(anime_id: int,
                 anime_name: str,
                 anime_status: str,
                 episodes: int,
-                year: str,
+                year: int,
                 season: str,
-                avg_episode_time: float
+                avg_episode_time: float | int
                 ) -> bool:
     #check valid input
     if anime_status not in ['currently_airing', 'not_yet_aired', 'finished_airing']:
         raise TypeError("invalid status")
     if episodes < 1:
         raise TypeError("invalid episodes")
+    if year > 2026 or year < 1930:
+        raise TypeError("invalid year")
     if season not in ['spring', 'summer', 'fall', 'winter']:
         raise TypeError("invalid season")
     
