@@ -191,3 +191,32 @@ class test_database_manager:
         
         # on foreign key check
         self.cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
+    
+    #test insert_studio method
+    def test_insert_studio(self):
+        #clear table
+        self.cursor.execute("DELETE FROM studio")
+        self.cursor.execute("COMMIT;")
+        
+        #simple test
+        database_manager.insert_studio(88, 'kir_studio')
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_studio('kir1', 'kir2')
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_studio(88, 78)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_studio(88.8, 'kir2')
+        with pytest.raises(TypeError):
+            database_manager.insert_studio(-8, 'kir2')
+        
+        #insert test
+        database_manager.insert_studio(99, 'an45')
+        self.cursor.execute("SELECT * FROM studio WHERE studio_id = 99")
+        inputs: tuple = (99, 'an45', 0)
+        assert inputs == self.cursor.fetchone()
+        
+        #clear table
+        self.cursor.execute("DELETE FROM studio")
+        self.cursor.execute("COMMIT;")
