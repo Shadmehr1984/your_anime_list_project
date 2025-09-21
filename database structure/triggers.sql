@@ -7,7 +7,7 @@ DELIMITER //
     FOR EACH ROW
     BEGIN
         UPDATE studio
-        SET product_number = product_number + 1
+        SET product_numbers = product_numbers + 1
         WHERE studio.studio_id = NEW.studio_id;
     END//
 DELIMITER ;
@@ -22,7 +22,7 @@ DELIMITER //
     FOR EACH ROW
     BEGIN
         UPDATE studio
-        SET product_number = product_number - 1
+        SET product_numbers = product_numbers - 1
         WHERE studio.studio_id = OLD.studio_id;
     END//
 DELIMITER ;
@@ -38,11 +38,11 @@ DELIMITER //
     BEGIN
         IF NEW.studio_id != OLD.studio_id THEN
             UPDATE studio
-            SET product_number = product_number - 1
+            SET product_numbers = product_numbers - 1
             WHERE studio_id = OLD.studio_id;
 
             UPDATE studio
-            SET product_number = product_number + 1
+            SET product_numbers = product_numbers + 1
             WHERE studio_id = NEW.studio_id;
         END IF;
     END//
