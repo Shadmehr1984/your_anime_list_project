@@ -5,7 +5,7 @@ import json
 import pytest
 
 
-#test data_handling module
+#*test data_handling module
 class test_data_handling:
     
     #test get_anime_info method
@@ -81,12 +81,16 @@ class test_data_handling:
         
         assert True
 
-#test database_manager module
+#*test database_manager module
 class test_database_manager:
     cursor = database_manager.get_cursor()
 
     #test insert_genre method
     def test_insert_genre(self):
+        #clear table
+        self.cursor.execute("DELETE FROM genre")
+        self.cursor.execute("COMMIT;")
+        
         #simple test
         database_manager.insert_genre(13, 'action')
         
@@ -108,11 +112,16 @@ class test_database_manager:
         
         #clear table
         self.cursor.execute("DELETE FROM genre")
+        self.cursor.execute("COMMIT;")
     
-    #test insert_anime_genres
+    #test insert_anime_genres method
     def test_insert_anime_genres(self):
         # off foreign key check
         self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
+        
+        #clear table
+        self.cursor.execute("DELETE FROM anime_genres")
+        self.cursor.execute("COMMIT;")
         
         #simple test
         database_manager.insert_anime_genres(12, 45)
@@ -139,6 +148,46 @@ class test_database_manager:
         
         #clear table
         self.cursor.execute("DELETE FROM anime_genres")
+        self.cursor.execute("COMMIT;")
+        
+        # on foreign key check
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
+    
+    #test insert_studio_production method
+    def test_insert_studio_production(self):
+        # off foreign key check
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
+        
+        #clear table
+        self.cursor.execute("DELETE FROM anime_production_studio")
+        self.cursor.execute("COMMIT;")
+        
+        #simple test
+        database_manager.insert_studio_production(66, 77)
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_studio_production('goh', 78)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_studio_production(67, '78')
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_studio_production(67.7, 78)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_studio_production(67, 78.7)
+        with pytest.raises(TypeError):
+            database_manager.insert_studio_production(67, -78)
+        with pytest.raises(TypeError):
+            database_manager.insert_studio_production(-67, 78)
+        
+        #insert test
+        database_manager.insert_studio_production(14, 41)
+        self.cursor.execute('SELECT * FROM anime_production_studio WHERE anime_id = 14 AND studio_id = 41')
+        inputs: tuple = (14, 41)
+        assert inputs == self.cursor.fetchone()
+        
+        #clear table
+        self.cursor.execute("DELETE FROM anime_production_studio")
+        self.cursor.execute("COMMIT;")
         
         # on foreign key check
         self.cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
