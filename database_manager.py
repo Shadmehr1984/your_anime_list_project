@@ -34,6 +34,7 @@ def insert_genre(genre_id: int, genre_name: str) -> bool:
     
     #insert data
     __cursor.execute(f"INSERT INTO genre VALUES({genre_id}, '{genre_name}', DEFAULT)")
+    __cursor.execute("COMMIT;")
     
     #check insert
     __cursor.execute(f"SELECT * FROM genre WHERE genre_id = {genre_id}")
@@ -53,6 +54,7 @@ def insert_anime_genres(anime_id: int, genre_id: int) -> bool:
     
     #insert data
     __cursor.execute(f"INSERT INTO anime_genres VALUES({anime_id}, {genre_id})")
+    __cursor.execute("COMMIT;")
     
     #check insert
     __cursor.execute(f"SELECT * FROM anime_genres WHERE anime_id = {anime_id} AND genre_id = {genre_id}")
@@ -72,6 +74,7 @@ def insert_studio_production(anime_id: int, studio_id: int) -> bool:
     
     #insert data
     __cursor.execute(f"INSERT INTO anime_production_studio VALUES({anime_id}, {studio_id})")
+    __cursor.execute("COMMIT;")
     
     #check insert
     __cursor.execute(f"SELECT * FROM anime_production_studio WHERE anime_id = {anime_id} AND studio_id = {studio_id}")
@@ -89,6 +92,7 @@ def insert_studio(studio_id: int, studio_name: str) -> bool:
     
     #insert data
     __cursor.execute(f"INSERT INTO studio VALUES({studio_id}, '{studio_name}', DEFAULT)")
+    __cursor.execute("COMMIT;")
     
     #check insert
     __cursor.execute(f"SELECT * FROM studio WHERE studio_id = {studio_id}")
@@ -117,6 +121,7 @@ def insert_anime(anime_id: int,
     
     #insert data
     __cursor.execute(f"INSERT INTO anime VALUES({anime_id}, '{anime_name}', '{anime_status}', DEFAULT, {episodes}, '{year}', '{season}', {avg_episode_time}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
+    __cursor.execute("COMMIT;")
     
     #check insert
     __cursor.execute(f"SELECT * FROM anime WHERE anime_id = {anime_id}")
@@ -134,6 +139,7 @@ def insert_account(account_id: int, user_name: str) -> bool:
     
     #insert data
     __cursor.execute(f"INSERT INTO account VALUES({account_id}, '{user_name}', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
+    __cursor.execute("COMMIT;")
     
     #check insert
     __cursor.execute(f"SELECT * FROM account WHERE account_id = {account_id}")
@@ -159,6 +165,7 @@ def insert_to_list(anime_id: int, account_id: int, score: float, status: str, ep
     
     #insert data
     __cursor.execute(f"INSERT INTO list VALUES({anime_id}, {account_id}, {score}, '{status}', {episodes_watched})")
+    __cursor.execute("COMMIT;")
     
     #check insert
     __cursor.execute(f"SELECT * FROM list WHERE anime_id = {anime_id} AND account_id = {account_id}")
