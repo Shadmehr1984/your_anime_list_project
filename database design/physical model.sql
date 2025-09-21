@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS anime(
     episodes INT DEFAULT 0,
     year YEAR NOT NULL,
     season ENUM('spring', 'summer', 'fall', 'winter') NOT NULL,
-    avg_episodes_time INT NOT NULL,
+    avg_episodes_time FLOAT(4, 2) NOT NULL,
     plan_to_watch_count INT DEFAULT 0,
     completed_count INT DEFAULT 0,
     dropped_count INT DEFAULT 0,
