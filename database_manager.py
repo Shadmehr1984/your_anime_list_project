@@ -112,6 +112,8 @@ def insert_anime(anime_id: int,
                 avg_episode_time: float | int
                 ) -> bool:
     #check valid input
+    if anime_id < 0:
+        raise TypeError("invalid anime_id")
     if anime_status not in ['currently_airing', 'not_yet_aired', 'finished_airing']:
         raise TypeError("invalid status")
     if episodes < 1:
@@ -120,6 +122,8 @@ def insert_anime(anime_id: int,
         raise TypeError("invalid year")
     if season not in ['spring', 'summer', 'fall', 'winter']:
         raise TypeError("invalid season")
+    if avg_episode_time < 0:
+        raise TypeError("invalid avg_episode_time")
     
     #insert data
     __cursor.execute(f"INSERT INTO anime VALUES({anime_id}, '{anime_name}', '{anime_status}', DEFAULT, {episodes}, '{year}', '{season}', {avg_episode_time}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
