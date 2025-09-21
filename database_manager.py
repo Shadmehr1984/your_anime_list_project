@@ -156,7 +156,7 @@ def insert_account(account_id: int, user_name: str) -> bool:
 
 #define a method for add anime to a list
 @typechecked
-def insert_to_list(anime_id: int, account_id: int, score: float, status: str, episodes_watched: int) -> bool:
+def insert_to_list(anime_id: int, account_id: int, score: int, status: str, episodes_watched: int) -> bool:
     #check valid input
     if anime_id < 0:
         raise TypeError("invalid anime_id")
