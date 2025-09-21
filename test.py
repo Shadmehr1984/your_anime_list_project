@@ -220,3 +220,50 @@ class test_database_manager:
         #clear table
         self.cursor.execute("DELETE FROM studio")
         self.cursor.execute("COMMIT;")
+    
+    #test insert_anime method
+    def test_insert_anime(self):
+        #clear table
+        self.cursor.execute("DELETE FROM anime")
+        self.cursor.execute("COMMIT;")
+        
+        #simple test
+        database_manager.insert_anime(111, 'shady', 'finished_airing', 56, 2005, 'spring', 24.5)
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_anime('222', 'nah', 'currently_airing', 12, 2025, 'fall', 21.9)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_anime(222, 555, 'currently_airing', 12, 2025, 'fall', 21.9)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_anime(222, 'nah', 888888, 12, 2025, 'fall', 21.9)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_anime(222, 'nah', 'currently_airing', 12.5, 2025, 'fall', 21.9)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_anime(222, 'nah', 'currently_airing', 12, '2025', 'fall', 21.9)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_anime(222, 'nah', 'currently_airing', 12, 2025, ['fall', 'spring'], 21.9)
+        with pytest.raises(TypeCheckError):
+            database_manager.insert_anime(222, 'nah', 'currently_airing', 12, 2025, 'fall', 'kir')
+        with pytest.raises(TypeError):
+            database_manager.insert_anime(-222, 'nah', 'currently_airing', 12, 2025, 'fall', 21.9)
+        with pytest.raises(TypeError):
+            database_manager.insert_anime(222, 'nah', 'fuck', 12, 2025, 'fall', 21.9)
+        with pytest.raises(TypeError):
+            database_manager.insert_anime(222, 'nah', 'currently_airing', 0, 2025, 'fall', 21.9)
+        with pytest.raises(TypeError):
+            database_manager.insert_anime(222, 'nah', 'currently_airing', 12, 2027, 'fall', 21.9)
+        with pytest.raises(TypeError):
+            database_manager.insert_anime(222, 'nah', 'currently_airing', 12, 2025, 'the', 21.9)
+        with pytest.raises(TypeError):
+            database_manager.insert_anime(222, 'nah', 'currently_airing', 12, 2027, 'fall', -21.9)
+        
+        #insert test
+        database_manager.insert_anime(565, "test_anime", "currently_airing", 24, 2011, 'winter', 20.3)
+        self.cursor.execute("SELECT * FROM anime WHERE anime_id = 565")
+        inputs: tuple = (565, "test_anime", "currently_airing", 0, 24, 2011, 'winter', 20.3, 0, 0, 0, 0, 0)
+        assert inputs == self.cursor.fetchone()
+        
+        #clear table
+        self.cursor.execute("DELETE FROM anime")
+        self.cursor.execute("COMMIT;")
