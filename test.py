@@ -6,11 +6,11 @@ import pytest
 
 
 #*test data_handling module
+@pytest.mark.data_handling
 class test_data_handling:
     
     #test get_anime_info method
     @pytest.mark.need_vpn
-    @pytest.mark.data_handling
     def test_get_anime_info(self):
         #normal using test
         data_handling.get_anime_info(1, False)
@@ -35,7 +35,6 @@ class test_data_handling:
 
     #test get_user_list method
     @pytest.mark.need_vpn
-    @pytest.mark.data_handling
     def test_get_user_list(self):
         #simple test
         data_handling.get_user_list('ssszzzast', False)
@@ -58,7 +57,6 @@ class test_data_handling:
     
     #test get_seasonal_animes method
     @pytest.mark.need_vpn
-    @pytest.mark.data_handling
     def test_get_seasonal_animes(self):
         #simple test
         data_handling.get_seasonal_animes('winter', 2024, False)
@@ -88,12 +86,12 @@ class test_data_handling:
         assert True
 
 #*test database_manager module
+@pytest.mark.database_manager
 class test_database_manager:
     cursor = database_manager.get_cursor()
 
     #test insert_genre method
     @pytest.mark.before_dml
-    @pytest.mark.database_manager
     def test_insert_genre(self):
         #clear table
         self.cursor.execute("DELETE FROM genre")
@@ -124,7 +122,6 @@ class test_database_manager:
     
     #test insert_anime_genres method
     @pytest.mark.before_dml
-    @pytest.mark.database_manager
     def test_insert_anime_genres(self):
         # off foreign key check
         self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
@@ -165,7 +162,6 @@ class test_database_manager:
     
     #test insert_studio_production method
     @pytest.mark.before_dml
-    @pytest.mark.database_manager
     def test_insert_studio_production(self):
         # off foreign key check
         self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
@@ -206,7 +202,6 @@ class test_database_manager:
     
     #test insert_studio method
     @pytest.mark.before_dml
-    @pytest.mark.database_manager
     def test_insert_studio(self):
         #clear table
         self.cursor.execute("DELETE FROM studio")
@@ -237,7 +232,6 @@ class test_database_manager:
     
     #test insert_anime method
     @pytest.mark.before_dml
-    @pytest.mark.database_manager
     def test_insert_anime(self):
         #clear table
         self.cursor.execute("DELETE FROM anime")
@@ -286,7 +280,6 @@ class test_database_manager:
     
     #test insert_account method
     @pytest.mark.before_dml
-    @pytest.mark.database_manager
     def test_insert_account(self):
         #clear table
         self.cursor.execute("DELETE FROM account")
@@ -315,7 +308,6 @@ class test_database_manager:
     
     #test insert_to_list method
     @pytest.mark.before_dml
-    @pytest.mark.database_manager
     def test_insert_to_list(self):
         #off foreign key check
         self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
