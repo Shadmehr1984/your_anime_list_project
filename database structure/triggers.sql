@@ -236,6 +236,8 @@ DELIMITER //
     FOR EACH ROW
     BEGIN
         -- create temporary table for save ram after even join
+        DROP TEMPORARY TABLE IF EXISTS account_list;
+        
         CREATE TEMPORARY TABLE account_list (
             SELECT anime_id, score, status
             FROM list
