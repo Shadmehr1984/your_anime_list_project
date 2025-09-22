@@ -23,8 +23,9 @@ __cursor = root.cursor()
 def get_cursor():
     return __cursor
 
-#!database functions
+#!database methods
 
+#*insert methods
 #define a method for insert new genre
 @typechecked
 def insert_genre(genre_id: int, genre_name: str) -> bool:
@@ -179,3 +180,101 @@ def insert_to_list(anime_id: int, account_id: int, score: int, status: str, epis
     inputs: tuple = (anime_id, account_id, score, status, episodes_watched)
     
     return inputs == __cursor.fetchone()
+
+#*check exist methods
+#check exist genre method
+@typechecked
+def check_exist_genre(genre_id: int) -> bool:
+    #invalid input check
+    if genre_id < 0:
+        raise TypeError("invalid genre_id")
+    
+    #search genre
+    __cursor.execute(f"SELECT genre_id FROM genre WHERE genre_id = {genre_id}")
+    
+    #check result
+    return (genre_id) == __cursor.fetchone()
+
+#check exist anime_genres method
+@typechecked
+def check_exist_anime_genres(anime_id: int, genre_id: int) -> bool:
+    #check invalid input
+    if anime_id < 0:
+        raise TypeError("invalid anime_id")
+    if genre_id < 0:
+        raise TypeError("invalid genre_id")
+    
+    #search anime_genres
+    __cursor.execute(f"SELECT anime_id, genre_id FROM anime_genres WHERE anime_id = {anime_id} AND genre_id = {genre_id}")
+    
+    #check result
+    return (anime_id, genre_id) == __cursor.fetchone()
+
+#check exist studio_production method
+@typechecked
+def check_exist_studio_production(anime_id: int, studio_id: int) -> bool:
+    #invalid input check
+    if anime_id < 0:
+        raise TypeError("invalid anime_id")
+    if studio_id < 0:
+        raise TypeError("invalid studio_id")
+    
+    #search studio_production
+    __cursor.execute(f"SELECT anime_id, studio_id FROM anime_production_studio WHERE anime_id = {anime_id} AND studio_id = {studio_id}")
+    
+    #check result
+    return (anime_id, studio_id) == __cursor.fetchone()
+
+#check exist studio method
+@typechecked
+def check_exist_studio(studio_id: int) -> bool:
+    #invalid input check
+    if studio_id < 0:
+        raise TypeError("invalid studio_id")
+    
+    #search studio
+    __cursor.execute(f"SELECT studio_id FROM studio WHERE studio_id = {studio_id}")
+    
+    #check result
+    return (studio_id) == __cursor.fetchone()
+
+#check exist anime method
+@typechecked
+def check_exist_anime(anime_id: int) -> bool:
+    #invalid input check
+    if anime_id < 0:
+        raise TypeError("invalid anime_id")
+    
+    #search anime
+    __cursor.execute(f"SELECT anime_id FROM anime WHERE anime_id = {anime_id}")
+    
+    #check result
+    return (anime_id) == __cursor.fetchone()
+
+#check exist account method
+@typechecked
+def check_exist_account(account_id: int) -> bool:
+    #invalid input check
+    if account_id < 0:
+        raise TypeError("invalid anime_id")
+    
+    #search account
+    __cursor.execute(f"SELECT account_id FROM account WHERE account_id = {account_id}")
+    
+    #check result
+    return (account_id) == __cursor.fetchone()
+
+#check exist on list method
+@typechecked
+def check_exist_on_list(anime_id: int, account_id: int) -> bool:
+    #check invalid input
+    if anime_id < 0:
+        raise TypeError("invalid anime_id")
+    if account_id < 0:
+        raise TypeError("invalid account_id")
+    
+    #search on list
+    __cursor.execute(f"SELECT anime_id, account_id FROM list WHERE anime_id = {anime_id} AND account_id = {account_id}")
+    
+    #check result
+    return (anime_id, account_id) == __cursor.fetchone()
