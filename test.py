@@ -89,9 +89,12 @@ class test_data_handling:
 @pytest.mark.database_manager
 class test_database_manager:
     cursor = database_manager.get_cursor()
+    
+    #*insert tests
 
     #test insert_genre method
     @pytest.mark.before_dml
+    @pytest.mark.insert_test
     def test_insert_genre(self):
         #clear table
         self.cursor.execute("DELETE FROM genre")
@@ -122,6 +125,7 @@ class test_database_manager:
     
     #test insert_anime_genres method
     @pytest.mark.before_dml
+    @pytest.mark.insert_test
     def test_insert_anime_genres(self):
         # off foreign key check
         self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
@@ -162,6 +166,7 @@ class test_database_manager:
     
     #test insert_studio_production method
     @pytest.mark.before_dml
+    @pytest.mark.insert_test
     def test_insert_studio_production(self):
         # off foreign key check
         self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
@@ -202,6 +207,7 @@ class test_database_manager:
     
     #test insert_studio method
     @pytest.mark.before_dml
+    @pytest.mark.insert_test
     def test_insert_studio(self):
         #clear table
         self.cursor.execute("DELETE FROM studio")
@@ -232,6 +238,7 @@ class test_database_manager:
     
     #test insert_anime method
     @pytest.mark.before_dml
+    @pytest.mark.insert_test
     def test_insert_anime(self):
         #clear table
         self.cursor.execute("DELETE FROM anime")
@@ -280,6 +287,7 @@ class test_database_manager:
     
     #test insert_account method
     @pytest.mark.before_dml
+    @pytest.mark.insert_test
     def test_insert_account(self):
         #clear table
         self.cursor.execute("DELETE FROM account")
@@ -308,6 +316,7 @@ class test_database_manager:
     
     #test insert_to_list method
     @pytest.mark.before_dml
+    @pytest.mark.insert_test
     def test_insert_to_list(self):
         #off foreign key check
         self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
@@ -346,6 +355,213 @@ class test_database_manager:
         self.cursor.execute("SELECT * FROM list WHERE anime_id = 14 AND account_id = 3693")
         inputs: tuple = (14, 3693, 5, 'dropped', 12)
         assert inputs == self.cursor.fetchone()
+        
+        #clear table
+        self.cursor.execute("DELETE FROM list")
+        self.cursor.execute("COMMIT;")
+        
+        #on foreign key check
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
+    
+    #*check tests
+    
+    #test check_exist_genre method
+    @pytest.mark.before_dml
+    @pytest.mark.check_test
+    def test_check_exist_genre(self):
+        #clear table
+        self.cursor.execute("DELETE FROM genre")
+        self.cursor.execute("COMMIT;")
+        
+        #invalid input check
+        with pytest.raises(TypeCheckError):
+            database_manager.check_exist_genre('na')
+        with pytest.raises(TypeError):
+            database_manager.check_exist_genre(-55)
+        
+        #simple test
+        database_manager.insert_genre(12, 'kir')
+        assert database_manager.check_exist_genre(12)
+        
+        #not found test
+        assert not database_manager.check_exist_genre(66)
+        
+        #clear table
+        self.cursor.execute("DELETE FROM genre")
+        self.cursor.execute("COMMIT;")
+    
+    #test check_exist_anime_genres method
+    @pytest.mark.before_dml
+    @pytest.mark.check_test
+    def test_check_exist_anime_genres(self):
+        #off foreign key check
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
+        
+        #clear table
+        self.cursor.execute("DELETE FROM anime_genres")
+        self.cursor.execute("COMMIT;")
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.check_exist_anime_genres('an', 55)
+        with pytest.raises(TypeCheckError):
+            database_manager.check_exist_anime_genres(54, 'an')
+        with pytest.raises(TypeError):
+            database_manager.check_exist_anime_genres(54, -87)
+        with pytest.raises(TypeError):
+            database_manager.check_exist_anime_genres(-54, 87)
+        
+        #simple test
+        database_manager.insert_anime_genres(32, 39)
+        assert database_manager.check_exist_anime_genres(32, 39)
+        
+        #not fount test
+        assert not database_manager.check_exist_anime_genres(65, 78)
+        
+        #clear table
+        self.cursor.execute("DELETE FROM anime_genres")
+        self.cursor.execute("COMMIT;")
+        
+        #on foreign key check
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
+    
+    #test check_exist_studio_production method
+    @pytest.mark.before_dml
+    @pytest.mark.check_test
+    def test_check_exist_studio_production(self):
+        #off foreign key check
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
+        
+        #clear table
+        self.cursor.execute("DELETE FROM anime_production_studio")
+        self.cursor.execute("COMMIT;")
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.check_exist_studio_production('an', 45)
+        with pytest.raises(TypeCheckError):
+            database_manager.check_exist_studio_production(77, "an")
+        with pytest.raises(TypeError):
+            database_manager.check_exist_studio_production(-77, 45)
+        with pytest.raises(TypeError):
+            database_manager.check_exist_studio_production(77, -45)
+        
+        #simple test
+        database_manager.insert_studio_production(55, 555)
+        assert database_manager.check_exist_studio_production(55, 555)
+        
+        #not found test
+        assert not database_manager.check_exist_studio_production(88, 888)
+        
+        #clear table
+        self.cursor.execute("DELETE FROM anime_production_studio")
+        self.cursor.execute("COMMIT;")
+        
+        #on foreign key check
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
+    
+    #test check_exist_studio method
+    @pytest.mark.before_dml
+    @pytest.mark.check_test
+    def test_check_exist_studio(self):
+        #clear table
+        self.cursor.execute("DELETE FROM studio")
+        self.cursor.execute("COMMIT;")
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.check_exist_studio('an')
+        with pytest.raises(TypeError):
+            database_manager.check_exist_studio(-51)
+        
+        #simple test
+        database_manager.insert_studio(64, 'kir studio')
+        assert database_manager.check_exist_studio(64)
+        
+        #not found test
+        assert not database_manager.check_exist_studio(31)
+        
+        #clear table
+        self.cursor.execute("DELETE FROM studio")
+        self.cursor.execute("COMMIT;")
+    
+    #test check_exist_anime method
+    @pytest.mark.before_dml
+    @pytest.mark.check_test
+    def test_check_exist_anime(self):
+        #clear table
+        self.cursor.execute("DELETE FROM anime")
+        self.cursor.execute("COMMIT;")
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.check_exist_anime('an')
+        with pytest.raises(TypeError):
+            database_manager.check_exist_anime(-11)
+        
+        #simple test
+        database_manager.insert_anime(39, "koskhar abol", 'not_yet_aired', 65, 2025, 'fall', 26.1)
+        assert database_manager.check_exist_anime(39)
+        
+        #not found test
+        assert not database_manager.check_exist_anime(65)
+        
+        #clear table
+        self.cursor.execute("DELETE FROM anime")
+        self.cursor.execute("COMMIT;")
+    
+    #test check_exist_account method
+    @pytest.mark.before_dml
+    @pytest.mark.check_test
+    def test_check_exist_account(self):
+        #clear table
+        self.cursor.execute("DELETE FROM account")
+        self.cursor.execute("COMMIT;")
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.check_exist_account('an')
+        with pytest.raises(TypeError):
+            database_manager.check_exist_account(-11)
+        
+        #simple test
+        database_manager.insert_account(1384, 'ssszzzast')
+        assert database_manager.check_exist_account(1384)
+        
+        #not found test
+        assert not database_manager.check_exist_account(6)
+        
+        #clear table
+        self.cursor.execute("DELETE FROM account")
+        self.cursor.execute("COMMIT;")
+    
+    #test check_exist_on_list method
+    @pytest.mark.before_dml
+    @pytest.mark.check_test
+    def test_check_exist_on_list(self):
+        #off foreign key check
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
+        
+        #clear table
+        self.cursor.execute("DELETE FROM list")
+        self.cursor.execute("COMMIT;")
+        
+        #invalid input test
+        with pytest.raises(TypeCheckError):
+            database_manager.check_exist_on_list('an', 45)
+        with pytest.raises(TypeCheckError):
+            database_manager.check_exist_on_list(77, "an")
+        with pytest.raises(TypeError):
+            database_manager.check_exist_on_list(-77, 45)
+        with pytest.raises(TypeError):
+            database_manager.check_exist_on_list(77, -45)
+        
+        #simple test
+        database_manager.insert_to_list(66, 1384, 9, 'dropped', 11)
+        assert database_manager.check_exist_on_list(66, 1384)
+        
+        #not found test
+        assert not database_manager.check_exist_on_list(99, 474)
         
         #clear table
         self.cursor.execute("DELETE FROM list")
