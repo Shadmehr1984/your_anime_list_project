@@ -193,7 +193,7 @@ def check_exist_genre(genre_id: int) -> bool:
     __cursor.execute(f"SELECT genre_id FROM genre WHERE genre_id = {genre_id}")
     
     #check result
-    return (genre_id) == __cursor.fetchone()
+    return tuple([genre_id]) == __cursor.fetchone()
 
 #check exist anime_genres method
 @typechecked
@@ -208,7 +208,7 @@ def check_exist_anime_genres(anime_id: int, genre_id: int) -> bool:
     __cursor.execute(f"SELECT anime_id, genre_id FROM anime_genres WHERE anime_id = {anime_id} AND genre_id = {genre_id}")
     
     #check result
-    return (anime_id, genre_id) == __cursor.fetchone()
+    return tuple([anime_id, genre_id]) == __cursor.fetchone()
 
 #check exist studio_production method
 @typechecked
@@ -223,7 +223,7 @@ def check_exist_studio_production(anime_id: int, studio_id: int) -> bool:
     __cursor.execute(f"SELECT anime_id, studio_id FROM anime_production_studio WHERE anime_id = {anime_id} AND studio_id = {studio_id}")
     
     #check result
-    return (anime_id, studio_id) == __cursor.fetchone()
+    return tuple([anime_id, studio_id]) == __cursor.fetchone()
 
 #check exist studio method
 @typechecked
@@ -236,7 +236,7 @@ def check_exist_studio(studio_id: int) -> bool:
     __cursor.execute(f"SELECT studio_id FROM studio WHERE studio_id = {studio_id}")
     
     #check result
-    return (studio_id) == __cursor.fetchone()
+    return tuple([studio_id]) == __cursor.fetchone()
 
 #check exist anime method
 @typechecked
@@ -249,7 +249,7 @@ def check_exist_anime(anime_id: int) -> bool:
     __cursor.execute(f"SELECT anime_id FROM anime WHERE anime_id = {anime_id}")
     
     #check result
-    return (anime_id) == __cursor.fetchone()
+    return tuple([anime_id]) == __cursor.fetchone()
 
 #check exist account method
 @typechecked
@@ -262,7 +262,7 @@ def check_exist_account(account_id: int) -> bool:
     __cursor.execute(f"SELECT account_id FROM account WHERE account_id = {account_id}")
     
     #check result
-    return (account_id) == __cursor.fetchone()
+    return tuple([account_id]) == __cursor.fetchone()
 
 #check exist on list method
 @typechecked
@@ -277,4 +277,4 @@ def check_exist_on_list(anime_id: int, account_id: int) -> bool:
     __cursor.execute(f"SELECT anime_id, account_id FROM list WHERE anime_id = {anime_id} AND account_id = {account_id}")
     
     #check result
-    return (anime_id, account_id) == __cursor.fetchone()
+    return tuple([anime_id, account_id]) == __cursor.fetchone()
