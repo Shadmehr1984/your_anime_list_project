@@ -1,6 +1,17 @@
 import mysql.connector
 from typeguard import typechecked
 
+#!temp methods
+
+#solve string problem
+@typechecked
+def __better_format_str(string: str) -> str:
+    string = string.replace('\"', '\'', string.count('\"'))
+    
+    string = '\"' + string +'\"'
+    
+    return string
+
 # take __password from txt file
 __password: str
 with open('mysql root password.txt') as file:
@@ -33,8 +44,11 @@ def insert_genre(genre_id: int, genre_name: str) -> bool:
     if genre_id < 0:
         raise TypeError("invalid genre_id")
     
+    #set genre_name in better format
+    genre_name = __better_format_str(genre_name)
+    
     #insert data
-    __cursor.execute(f"INSERT INTO genre VALUES({genre_id}, '{genre_name}', DEFAULT)")
+    __cursor.execute(f"INSERT INTO genre VALUES({genre_id}, {genre_name}, DEFAULT)")
     __cursor.execute("COMMIT;")
     
     #check insert
@@ -91,8 +105,11 @@ def insert_studio(studio_id: int, studio_name: str) -> bool:
     if studio_id < 0:
         raise TypeError("invalid studio_id")
     
+    #set studio name in better format
+    studio_name = __better_format_str(studio_name)
+    
     #insert data
-    __cursor.execute(f"INSERT INTO studio VALUES({studio_id}, '{studio_name}', DEFAULT)")
+    __cursor.execute(f"INSERT INTO studio VALUES({studio_id}, {studio_name}, DEFAULT)")
     __cursor.execute("COMMIT;")
     
     #check insert
@@ -126,8 +143,11 @@ def insert_anime(anime_id: int,
     if avg_episode_time < 0:
         raise TypeError("invalid avg_episode_time")
     
+    #get anime name better format
+    anime_name = __better_format_str(anime_name)
+    
     #insert data
-    __cursor.execute(f"INSERT INTO anime VALUES({anime_id}, '{anime_name}', '{anime_status}', DEFAULT, {episodes}, '{year}', '{season}', {avg_episode_time}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
+    __cursor.execute(f"INSERT INTO anime VALUES({anime_id}, {anime_name}, '{anime_status}', DEFAULT, {episodes}, '{year}', '{season}', {avg_episode_time}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
     __cursor.execute("COMMIT;")
     
     #check insert
