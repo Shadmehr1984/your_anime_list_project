@@ -91,7 +91,7 @@ def get_seasonal_animes(season: str, year: int, save_data: bool) -> dict:
         raise TypeError("invalid input")
     if season not in ['spring', 'summer', 'fall', 'winter']:
         raise TypeError("invalid season")
-    if year not in range(1930, 2027):
+    if year not in range(1930, 2028):
         raise TypeError("invalid year")
     
     #send request

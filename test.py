@@ -63,7 +63,7 @@ class test_data_handling:
         
         #not found test
         with pytest.raises(KeyError):
-            data_handling.get_seasonal_animes('spring', 2026, False)
+            data_handling.get_seasonal_animes('spring', 2027, False)
         
         #invalid input test
         with pytest.raises(TypeError):
