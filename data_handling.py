@@ -26,7 +26,7 @@ def __save_data(result: dict) -> None:
     with open('temp_json.json', 'w') as file:
             json.dump(result, file, indent=4)
 
-
+#!get info methods
 
 #get anime information with using his anime id
 def get_anime_info(anime_id: int, save_data: bool) -> dict:
@@ -96,7 +96,7 @@ def get_seasonal_animes(season: str, year: int, save_data: bool) -> dict:
     
     #send request
     url_add: str = f'anime/season/{str(year)}/{season}'
-    parameters: dict = {'fields': 'id,alternative_titles,status,genres,num_episodes,start_season,source,average_episode_duration,rating,studios'}
+    parameters: dict = {'limit': 500}
     result: dict
     status_code: int
     result, status_code = __send_request(url_add, parameters)
