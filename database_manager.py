@@ -273,16 +273,16 @@ def check_exist_anime(anime_id: int) -> bool:
 
 #check exist account method
 @typechecked
-def check_exist_account(account_id: int) -> bool:
+def check_exist_account(user_name: str) -> bool:
     #invalid input check
-    if account_id < 0:
-        raise TypeError("invalid anime_id")
+    if len(user_name) < 8:
+        raise TypeError("invalid user_name")
     
     #search account
-    __cursor.execute(f"SELECT account_id FROM account WHERE account_id = {account_id}")
+    __cursor.execute(f"SELECT user_name FROM account WHERE user_name = '{user_name}'")
     
     #check result
-    return tuple([account_id]) == __cursor.fetchone()
+    return tuple([user_name]) == __cursor.fetchone()
 
 #check exist on list method
 @typechecked

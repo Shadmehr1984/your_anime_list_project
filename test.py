@@ -518,16 +518,16 @@ class test_database_manager:
         
         #invalid input test
         with pytest.raises(TypeCheckError):
-            database_manager.check_exist_account('an')
+            database_manager.check_exist_account(11)
         with pytest.raises(TypeError):
-            database_manager.check_exist_account(-11)
+            database_manager.check_exist_account('kir')
         
         #simple test
-        database_manager.insert_account(1384, 'ssszzzast')
-        assert database_manager.check_exist_account(1384)
+        database_manager.insert_account('ssszzzast')
+        assert database_manager.check_exist_account("ssszzzast")
         
         #not found test
-        assert not database_manager.check_exist_account(6)
+        assert not database_manager.check_exist_account("bache_koni")
         
         #clear table
         self.cursor.execute("DELETE FROM account")
