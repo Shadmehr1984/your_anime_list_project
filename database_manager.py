@@ -159,21 +159,21 @@ def insert_anime(anime_id: int,
 
 #define a method for create new account
 @typechecked
-def insert_account(account_id: int, user_name: str) -> bool:
+def insert_account(user_name: str) -> bool:
     #check valid input
-    if account_id < 0:
-        raise TypeError("invalid account_id")
+    if len(user_name) < 8:
+        raise TypeError("invalid user name")
     
     #insert data
-    __cursor.execute(f"INSERT INTO account VALUES({account_id}, '{user_name}', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
+    __cursor.execute(f"INSERT INTO account VALUES(DEFAULT, '{user_name}', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
     __cursor.execute("COMMIT;")
     
     #check insert
-    __cursor.execute(f"SELECT * FROM account WHERE account_id = {account_id}")
+    __cursor.execute(f"SELECT * FROM account WHERE user_name = '{user_name}'")
     
-    inputs: tuple = (account_id, user_name, 0, 0, 0, 0, 0, 0)
+    inputs: tuple = (user_name, 0, 0, 0, 0, 0, 0)
     
-    return inputs == __cursor.fetchone()
+    return inputs == __cursor.fetchone()[1:]
 
 #define a method for add anime to a list
 @typechecked

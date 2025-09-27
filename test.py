@@ -294,21 +294,19 @@ class test_database_manager:
         self.cursor.execute("COMMIT;")
         
         #simple test
-        database_manager.insert_account(456, 'colorFull_woman')
+        database_manager.insert_account('colorFull_woman')
         
         #invalid input test
         with pytest.raises(TypeCheckError):
-            database_manager.insert_account('123', 'kir2025')
-        with pytest.raises(TypeCheckError):
-            database_manager.insert_account(123, 2025)
+            database_manager.insert_account(2025)
         with pytest.raises(TypeError):
-            database_manager.insert_account(-123, 'kir2025')
+            database_manager.insert_account('kir2025')
         
         #insert test
-        database_manager.insert_account(999, "mobMaster69")
-        self.cursor.execute("SELECT * FROM account WHERE account_id = 999")
-        inputs: tuple = (999, "mobMaster69", 0, 0, 0, 0, 0, 0)
-        assert inputs == self.cursor.fetchone()
+        database_manager.insert_account("mobMaster69")
+        self.cursor.execute("SELECT * FROM account WHERE user_name = \"mobMaster69\"")
+        inputs: tuple = ("mobMaster69", 0, 0, 0, 0, 0, 0)
+        assert inputs == self.cursor.fetchone()[1:]
         
         #clear table
         self.cursor.execute("DELETE FROM account")

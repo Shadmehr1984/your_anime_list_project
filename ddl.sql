@@ -7,7 +7,7 @@ USE your_anime_list;
 #!tables
 DROP TABLE IF EXISTS account;
 CREATE TABLE IF NOT EXISTS account(
-    account_id INT PRIMARY KEY,
+    account_id INT PRIMARY KEY AUTO_INCREMENT,
     user_name VARCHAR(20) NOT NULL UNIQUE,
     plan_to_watch_count INT DEFAULT 0,
     completed_count INT DEFAULT 0,
