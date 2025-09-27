@@ -485,6 +485,9 @@ DELIMITER //
 
     CREATE PROCEDURE calculate_and_clear_log_list()
     BEGIN
+        -- drop CTE if exist
+        DROP TEMPORARY TABLE IF EXISTS anime_changes;
+
         -- make a CTE for save anime changes
         CREATE TEMPORARY TABLE anime_changes(
             SELECT DISTINCT anime_id
@@ -509,8 +512,12 @@ DELIMITER //
 
         -- save insert and update changes
         UPDATE anime_changes
+        INNER JOIN log_list
+        USING(anime_id)
         SET score_changes = score_changes + new_score
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.log_status IN ('insert', 'update') AND log_list.new_status IN ('completed', 'dropped'));
+        WHERE anime_changes.anime_id = log_list.anime_id
+        AND log_list.log_status IN ('insert', 'update') 
+        AND log_list.new_status IN ('completed', 'dropped');
 
         UPDATE anime_changes
         SET plan_to_watch_changes = plan_to_watch_changes + 1
@@ -534,8 +541,12 @@ DELIMITER //
 
         -- save delete and update changes
         UPDATE anime_changes
+        INNER JOIN log_list
+        USING(anime_id)
         SET score_changes = score_changes - new_score
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.log_status IN ('delete', 'update') AND log_list.old_status IN ('completed', 'dropped'));
+        WHERE anime_changes.anime_id = log_list.anime_id
+        AND log_list.log_status IN ('delete', 'update') 
+        AND log_list.old_status IN ('completed', 'dropped');
 
         UPDATE anime_changes
         SET plan_to_watch_changes = plan_to_watch_changes - 1
@@ -561,30 +572,48 @@ DELIMITER //
 
         -- set new score
         UPDATE anime
+        INNER JOIN anime_changes
+        USING(anime_id)
         SET anime.score =
         ((anime.score * (anime.completed_count + anime.dropped_count)) + anime_changes.score_changes) / (anime.completed_count + anime_changes.completed_changes + anime.dropped_count + anime_changes.dropped_changes)
-        WHERE anime.anime_id IN (SELECT anime_id FROM anime_changes WHERE anime_changes.score_changes != 0);
+        WHERE anime.anime_id = anime_changes.anime_id
+        AND anime_changes.score_changes != 0;
 
         -- set new status count
         UPDATE anime
+        INNER JOIN anime_changes
+        USING(anime_id)
         SET anime.plan_to_watch_count = anime.plan_to_watch_count + anime_changes.plan_to_watch_changes
-        WHERE anime.anime_id IN (SELECT anime_id FROM anime_changes WHERE anime_changes.plan_to_watch_changes != 0);
+        WHERE anime.anime_id = anime_changes.anime_id
+        AND anime_changes.plan_to_watch_changes != 0;
 
         UPDATE anime
+        INNER JOIN anime_changes
+        USING(anime_id)
         SET anime.completed_count = anime.completed_count + anime_changes.completed_changes
-        WHERE anime.anime_id IN (SELECT anime_id FROM anime_changes WHERE anime_changes.completed_changes != 0);
+        WHERE anime.anime_id = anime_changes.anime_id
+        AND anime_changes.completed_changes != 0;
 
         UPDATE anime
+        INNER JOIN anime_changes
+        USING(anime_id)
         SET anime.dropped_count = anime.dropped_count + anime_changes.dropped_changes
-        WHERE anime.anime_id IN (SELECT anime_id FROM anime_changes WHERE anime_changes.dropped_changes != 0);
+        WHERE anime.anime_id = anime_changes.anime_id
+        AND anime_changes.dropped_changes != 0;
 
         UPDATE anime
+        INNER JOIN anime_changes
+        USING(anime_id)
         SET anime.on_hold_count = anime.on_hold_count + anime_changes.on_hold_changes
-        WHERE anime.anime_id IN (SELECT anime_id FROM anime_changes WHERE anime_changes.on_hold_changes != 0);
+        WHERE anime.anime_id = anime_changes.anime_id
+        AND anime_changes.on_hold_changes != 0;
 
         UPDATE anime
+        INNER JOIN anime_changes
+        USING(anime_id)
         SET anime.watching_count = anime.watching_count + anime_changes.watching_changes
-        WHERE anime.anime_id IN (SELECT anime_id FROM anime_changes WHERE anime_changes.watching_changes != 0);
+        WHERE anime.anime_id = anime_changes.anime_id
+        AND anime_changes.watching_changes != 0;
 
         -- clear log_list table
         TRUNCATE log_list;
