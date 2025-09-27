@@ -90,76 +90,52 @@ DELIMITER //
         -- save insert and update changes
         UPDATE anime_changes
         SET score_changes = score_changes + new_score
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list)
-        AND log_list.log_status IN ('insert', 'update')
-        AND log_list.new_status IN ('completed', 'dropped');
+        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.log_status IN ('insert', 'update') AND log_list.new_status IN ('completed', 'dropped'));
 
         UPDATE anime_changes
         SET plan_to_watch_changes = plan_to_watch_changes + 1
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list)
-        AND log_list.new_status = 'plan to watch'
-        AND log_list.log_status IN ('insert', 'update');
+        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.new_status = 'plan to watch' AND log_list.log_status IN ('insert', 'update'));
 
         UPDATE anime_changes
         SET completed_changes = completed_changes + 1
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list)
-        AND log_list.new_status = 'completed'
-        AND log_list.log_status IN ('insert', 'update');
+        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.new_status = 'completed' AND log_list.log_status IN ('insert', 'update'));
 
         UPDATE anime_changes
         SET dropped_changes = dropped_changes + 1
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list)
-        AND log_list.new_status = 'dropped'
-        AND log_list.log_status IN ('insert', 'update');
+        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.new_status = 'dropped' AND log_list.log_status IN ('insert', 'update'));
 
         UPDATE anime_changes
         SET on_hold_changes = on_hold_changes + 1
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list)
-        AND log_list.new_status = 'on hold'
-        AND log_list.log_status IN ('insert', 'update');
+        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.new_status = 'on hold' AND log_list.log_status IN ('insert', 'update'));
 
         UPDATE anime_changes
         SET watching_changes = watching_changes + 1
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list)
-        AND log_list.new_status = 'watching'
-        AND log_list.log_status IN ('insert', 'update');
+        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.new_status = 'watching' AND log_list.log_status IN ('insert', 'update'));
 
         -- save delete and update changes
         UPDATE anime_changes
         SET score_changes = score_changes - new_score
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list)
-        AND log_list.log_status IN ('delete', 'update')
-        AND log_list.old_status IN ('completed', 'dropped');
+        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.log_status IN ('delete', 'update') AND log_list.old_status IN ('completed', 'dropped'));
 
         UPDATE anime_changes
         SET plan_to_watch_changes = plan_to_watch_changes - 1
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list)
-        AND log_list.old_status = 'plan to watch'
-        AND log_list.log_status IN ('delete', 'update');
+        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.old_status = 'plan to watch' AND log_list.log_status IN ('delete', 'update'));
 
         UPDATE anime_changes
         SET completed_changes = completed_changes - 1
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list)
-        AND log_list.old_status = 'completed'
-        AND log_list.log_status IN ('delete', 'update');
+        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.old_status = 'completed' AND log_list.log_status IN ('delete', 'update'));
 
         UPDATE anime_changes
         SET dropped_changes = dropped_changes - 1
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list)
-        AND log_list.old_status = 'dropped'
-        AND log_list.log_status IN ('delete', 'update');
+        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.old_status = 'dropped' AND log_list.log_status IN ('delete', 'update'));
 
         UPDATE anime_changes
         SET on_hold_changes = on_hold_changes - 1
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list)
-        AND log_list.old_status = 'on hold'
-        AND log_list.log_status IN ('delete', 'update');
+        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.old_status = 'on hold' AND log_list.log_status IN ('delete', 'update'));
 
         UPDATE anime_changes
         SET watching_changes = watching_changes - 1
-        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list)
-        AND log_list.old_status = 'watching'
-        AND log_list.log_status IN ('delete', 'update');
+        WHERE anime_changes.anime_id IN (SELECT anime_id FROM log_list WHERE log_list.old_status = 'watching' AND log_list.log_status IN ('delete', 'update'));
 
         -- update animes changes
 
@@ -167,34 +143,28 @@ DELIMITER //
         UPDATE anime
         SET anime.score =
         ((anime.score * (anime.completed_count + anime.dropped_count)) + anime_changes.score_changes) / (anime.completed_count + anime_changes.completed_changes + anime.dropped_count + anime_changes.dropped_changes)
-        WHERE anime.anime_id = anime_changes.anime_id 
-        AND anime_changes.score_changes != 0;
+        WHERE anime.anime_id IN (SELECT anime_id FROM anime_changes WHERE anime_changes.score_changes != 0);
 
         -- set new status count
         UPDATE anime
         SET anime.plan_to_watch_count = anime.plan_to_watch_count + anime_changes.plan_to_watch_changes
-        WHERE anime.anime_id = anime_changes.anime_id
-        AND anime_changes.plan_to_watch_changes != 0;
+        WHERE anime.anime_id IN (SELECT anime_id FROM anime_changes WHERE anime_changes.plan_to_watch_changes != 0);
 
         UPDATE anime
         SET anime.completed_count = anime.completed_count + anime_changes.completed_changes
-        WHERE anime.anime_id = anime_changes.anime_id
-        AND anime_changes.completed_changes != 0;
+        WHERE anime.anime_id IN (SELECT anime_id FROM anime_changes WHERE anime_changes.completed_changes != 0);
 
         UPDATE anime
         SET anime.dropped_count = anime.dropped_count + anime_changes.dropped_changes
-        WHERE anime.anime_id = anime_changes.anime_id
-        AND anime_changes.dropped_changes != 0;
+        WHERE anime.anime_id IN (SELECT anime_id FROM anime_changes WHERE anime_changes.dropped_changes != 0);
 
         UPDATE anime
         SET anime.on_hold_count = anime.on_hold_count + anime_changes.on_hold_changes
-        WHERE anime.anime_id = anime_changes.anime_id
-        AND anime_changes.on_hold_changes != 0;
+        WHERE anime.anime_id IN (SELECT anime_id FROM anime_changes WHERE anime_changes.on_hold_changes != 0);
 
         UPDATE anime
         SET anime.watching_count = anime.watching_count + anime_changes.watching_changes
-        WHERE anime.anime_id = anime_changes.anime_id
-        AND anime_changes.watching_changes != 0;
+        WHERE anime.anime_id IN (SELECT anime_id FROM anime_changes WHERE anime_changes.watching_changes != 0);
 
         -- clear log_list table
         TRUNCATE log_list;
