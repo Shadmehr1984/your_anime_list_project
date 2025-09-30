@@ -57,14 +57,17 @@ def get_anime_info(anime_id: int, save_data: bool) -> dict:
     return result
 
 #get list of a account by using his user name
-def get_user_list(user_name: str, save_data: bool) -> dict:
+def get_user_list(user_name: str, save_data: bool, limit: int|None) -> dict:
     #valid type checking
     if type(user_name) != str or type(save_data) != bool:
         raise TypeError('invalid input')
     
+    #set limit value
+    if limit is None : limit = 300
+    
     #send request
     url_add: str = f'users/{user_name}/animelist'
-    parameters: dict = {'fields': 'list_status', 'limit': 300}
+    parameters: dict = {'fields': 'list_status', 'limit': {limit}}
     result: dict
     status_code: int
     result, status_code = __send_request(url_add, parameters)
