@@ -248,8 +248,8 @@ DELIMITER //
         UPDATE anime
         INNER JOIN account_list
         USING(anime_id)
-        SET anime.score = calculate_score(account_list.score, NULL, anime.score, completed_count + dropped_count, 'decrease')
-		WHERE account_list.status IN ('completed', 'dropped'); 
+        SET anime.score = IFNULL(calculate_score(account_list.score, NULL, anime.score, anime.completed_count + anime.dropped_count, 'decrease'), 0)
+		WHERE account_list.status IN ('completed', 'dropped');
         
         -- fix animes statuses
 		UPDATE anime
@@ -283,5 +283,3 @@ DELIMITER //
 		WHERE account_list.status = 'on hold';
     END//
 DELIMITER ;
-
-
