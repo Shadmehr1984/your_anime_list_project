@@ -12,7 +12,7 @@ with open('client id.txt') as file:
 
 #sending request to mal
 def __send_request(url_add: str, parameters: dict) -> dict | int:
-    response = requests.get(url=f'https://api.myanimelist.net/v2/{url_add}', 
+    response = requests.get(url=f'http://api.myanimelist.net/v2/{url_add}', 
                             headers={'X-MAL-CLIENT-ID' : __client_id}, 
                             params=parameters
                             )
