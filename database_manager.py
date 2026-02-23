@@ -161,7 +161,7 @@ def insert_anime(anime_id: int,
 @typechecked
 def insert_account(user_name: str) -> bool:
     #check valid input
-    if len(user_name) < 8:
+    if len(user_name) < 5:
         raise TypeError("invalid user name")
     
     #insert data
@@ -275,7 +275,7 @@ def check_exist_anime(anime_id: int) -> bool:
 @typechecked
 def check_exist_account(user_name: str) -> bool:
     #invalid input check
-    if len(user_name) < 8:
+    if len(user_name) < 5:
         raise TypeError("invalid user_name")
     
     #search account
