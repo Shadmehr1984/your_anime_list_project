@@ -43,6 +43,8 @@ def insert_genre(genre_id: int, genre_name: str) -> bool:
     #check valid input
     if genre_id < 0:
         raise TypeError("invalid genre_id")
+    if len(genre_name) > 50:
+        raise ValueError("genre name is so big")
     
     #set genre_name in better format
     genre_name = __better_format_str(genre_name)
@@ -104,6 +106,8 @@ def insert_studio(studio_id: int, studio_name: str) -> bool:
     #check valid input
     if studio_id < 0:
         raise TypeError("invalid studio_id")
+    if len(studio_name) > 50:
+        raise ValueError("studio name is so big")
     
     #set studio name in better format
     studio_name = __better_format_str(studio_name)
@@ -132,6 +136,8 @@ def insert_anime(anime_id: int,
     #check valid input
     if anime_id < 0:
         raise TypeError("invalid anime_id")
+    if len(anime_name) > 100:
+        raise ValueError("anime name is so big")
     if anime_status not in ['currently_airing', 'not_yet_aired', 'finished_airing']:
         raise TypeError("invalid status")
     if episodes < 1:
