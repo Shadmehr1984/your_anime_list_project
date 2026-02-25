@@ -38,14 +38,14 @@ CREATE TABLE IF NOT EXISTS anime(
 DROP TABLE IF EXISTS genre;
 CREATE TABLE IF NOT EXISTS genre(
     genre_id INT PRIMARY KEY,
-    genre_name VARCHAR(30) NOT NULL,
+    genre_name VARCHAR(50) NOT NULL,
     anime_numbers INT NOT NULL DEFAULT 0
 );
 
 DROP TABLE IF EXISTS studio;
 CREATE TABLE IF NOT EXISTS studio(
     studio_id INT PRIMARY KEY,
-    studio_name VARCHAR(30) NOT NULL,
+    studio_name VARCHAR(50) NOT NULL,
     product_numbers INT DEFAULT 0
 );
 
