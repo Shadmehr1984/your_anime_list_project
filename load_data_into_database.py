@@ -121,7 +121,7 @@ def load_anime(anime_id: int) -> bool :
 
 #load all seasonal anime info from mal into database (inside this method all genres and studios the anime have will be added)
 @typechecked
-def load_seasonal_anime(year: int, season: str) -> bool:
+def load_seasonal_anime(year: int, season: str, limit: int|None) -> bool:
     #invalid input checking
     if year not in range(1930, 2028):
         raise TypeError("invalid year")
@@ -129,7 +129,7 @@ def load_seasonal_anime(year: int, season: str) -> bool:
         raise TypeError("invalid season")
     
     #get seasonal anime info
-    result: dict = data_handling.get_seasonal_animes(season, year, False)
+    result: dict = data_handling.get_seasonal_animes(season, year, False, limit)
     for anime in result['data']:
         load_anime(anime['node']['id'])
     

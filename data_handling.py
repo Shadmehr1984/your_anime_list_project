@@ -88,7 +88,7 @@ def get_user_list(user_name: str, save_data: bool, limit: int|None) -> dict:
     return result
 
 #get all animes from a season
-def get_seasonal_animes(season: str, year: int, save_data: bool) -> dict:
+def get_seasonal_animes(season: str, year: int, save_data: bool, limit: int|None) -> dict:
     #valid type checking
     if type(season) != str or type(year) != int or type(save_data) != bool:
         raise TypeError("invalid input")
@@ -97,9 +97,12 @@ def get_seasonal_animes(season: str, year: int, save_data: bool) -> dict:
     if year not in range(1930, 2028):
         raise TypeError("invalid year")
     
+    #set limit value
+    if limit is None: limit = 500
+    
     #send request
     url_add: str = f'anime/season/{str(year)}/{season}'
-    parameters: dict = {'limit': 500}
+    parameters: dict = {'limit': {limit}}
     result: dict
     status_code: int
     result, status_code = __send_request(url_add, parameters)
