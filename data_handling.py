@@ -1,5 +1,6 @@
 import requests
 import json
+from typeguard import typechecked
 from time import sleep
 
 #take client id
@@ -8,7 +9,7 @@ with open('client id.txt') as file:
     __client_id = file.readline().rstrip('\n')
 
 
-#inner functions:
+#!inner functions:
 
 #sending request to mal
 def __send_request(url_add: str, parameters: dict) -> dict | int:
@@ -29,10 +30,11 @@ def __save_data(result: dict) -> None:
 #!get info methods
 
 #get anime information with using his anime id
+@typechecked
 def get_anime_info(anime_id: int, save_data: bool) -> dict:
-    #valid type checking
-    if type(anime_id) != int or type(save_data) != bool:
-        raise TypeError('invalid input')
+    #valid input check
+    if anime_id < 0:
+        raise TypeError('invalid anime_id')
     
     #send request
     url_add: str = f'anime/{str(anime_id)}'
@@ -57,10 +59,13 @@ def get_anime_info(anime_id: int, save_data: bool) -> dict:
     return result
 
 #get list of a account by using his user name
+@typechecked
 def get_user_list(user_name: str, save_data: bool, limit: int|None) -> dict:
-    #valid type checking
-    if type(user_name) != str or type(save_data) != bool:
-        raise TypeError('invalid input')
+    #valid input check
+    if len(user_name) < 5:
+        raise TypeError('invalid user_name')
+    if limit < 1 and limit is not None:
+        raise TypeError("invalid limit")
     
     #set limit value
     if limit is None : limit = 300
@@ -88,10 +93,11 @@ def get_user_list(user_name: str, save_data: bool, limit: int|None) -> dict:
     return result
 
 #get all animes from a season
+@typechecked
 def get_seasonal_animes(season: str, year: int, save_data: bool, limit: int|None) -> dict:
-    #valid type checking
-    if type(season) != str or type(year) != int or type(save_data) != bool:
-        raise TypeError("invalid input")
+    #valid input check
+    if limit < 1 and limit is not None:
+        raise TypeError("invalid limit")
     if season not in ['spring', 'summer', 'fall', 'winter']:
         raise TypeError("invalid season")
     if year not in range(1930, 2028):
