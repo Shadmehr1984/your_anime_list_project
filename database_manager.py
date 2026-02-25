@@ -1,18 +1,7 @@
 import mysql.connector
 from typeguard import typechecked
 
-#!temp methods
-
-#solve string problem
-@typechecked
-def __better_format_str(string: str) -> str:
-    string = string.replace('\"', '\'', string.count('\"'))
-    
-    string = '\"' + string +'\"'
-    
-    return string
-
-# take __password from txt file
+# take password from txt file
 __password: str
 with open('mysql root password.txt') as file:
     __password = file.readline()
@@ -29,6 +18,18 @@ root = mysql.connector.connect(
 
 #create cursor
 __cursor = root.cursor()
+
+#!temp methods
+
+#solve string problem
+@typechecked
+def __better_format_str(string: str) -> str:
+    string = string.replace('\"', '\'', string.count('\"'))
+    
+    string = '\"' + string +'\"'
+    
+    return string
+
 
 #define a method for get cursor
 def get_cursor():
