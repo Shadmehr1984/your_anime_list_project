@@ -1,18 +1,17 @@
 import mysql.connector
 from typeguard import typechecked
-
-# take password from txt file
-__password: str
-with open('mysql root password.txt') as file:
-    __password = file.readline()
+from dotenv import load_dotenv
+from os import getenv
+#load .env file
+load_dotenv()
 
 #connect to root user
 root = mysql.connector.connect(
-    host='127.0.0.1',
-    port=3306,
-    user='root',
-    database='your_anime_list',
-    password=__password,
+    host=getenv('DB_HOST'),
+    port=getenv('DB_PORT'),
+    user=getenv('DB_USER'),
+    database=getenv('DB_DATABASE'),
+    password=getenv('DB_PASSWORD'),
     use_pure=True
 )
 

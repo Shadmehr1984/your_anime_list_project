@@ -1,4 +1,4 @@
 client id.txt
-mysql root password.txt
 __pycache__
-temp_json.json
+*.json
+.env
