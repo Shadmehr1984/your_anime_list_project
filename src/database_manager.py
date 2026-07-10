@@ -1,19 +1,13 @@
-import mysql.connector
 from typeguard import typechecked
+from Db_connector import Db_connector
 from dotenv import load_dotenv
 from os import getenv
 #load .env file
 load_dotenv()
 
 #connect to root user
-root = mysql.connector.connect(
-    host=getenv('DB_HOST'),
-    port=getenv('DB_PORT'),
-    user=getenv('DB_USER'),
-    database=getenv('DB_DATABASE'),
-    password=getenv('DB_PASSWORD'),
-    use_pure=True
-)
+Db_connector()
+root = Db_connector.instance
 
 #create cursor
 __cursor = root.cursor()
