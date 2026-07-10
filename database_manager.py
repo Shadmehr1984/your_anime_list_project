@@ -20,16 +20,6 @@ __cursor = root.cursor()
 
 #!temp methods
 
-#solve string problem
-@typechecked
-def __better_format_str(string: str) -> str:
-    string = string.replace('\"', '\'', string.count('\"'))
-    
-    string = '\"' + string +'\"'
-    
-    return string
-
-
 #define a method for get cursor
 def get_cursor():
     return __cursor
@@ -46,19 +36,11 @@ def insert_genre(genre_id: int, genre_name: str) -> bool:
     if len(genre_name) > 50:
         raise ValueError("genre name is so big")
     
-    #set genre_name in better format
-    genre_name = __better_format_str(genre_name)
-    
     #insert data
-    __cursor.execute(f"INSERT INTO genre VALUES({genre_id}, {genre_name}, DEFAULT)")
+    __cursor.execute("INSERT INTO genre VALUES(%s, %s, DEFAULT)", [genre_id, genre_name])
     __cursor.execute("COMMIT;")
     
-    #check insert
-    __cursor.execute(f"SELECT * FROM genre WHERE genre_id = {genre_id}")
-    
-    inputs: tuple = (genre_id, genre_name, 0)
-    
-    return inputs == __cursor.fetchone()
+    return True
 
 #define a method for save anime genres
 @typechecked
@@ -70,15 +52,10 @@ def insert_anime_genres(anime_id: int, genre_id: int) -> bool:
         raise TypeError("invalid genre_id")
     
     #insert data
-    __cursor.execute(f"INSERT INTO anime_genres VALUES({anime_id}, {genre_id})")
+    __cursor.execute("INSERT INTO anime_genres VALUES(%s, %s)", [anime_id, genre_id])
     __cursor.execute("COMMIT;")
     
-    #check insert
-    __cursor.execute(f"SELECT * FROM anime_genres WHERE anime_id = {anime_id} AND genre_id = {genre_id}")
-    
-    inputs: tuple = (anime_id, genre_id)
-    
-    return inputs == __cursor.fetchone()
+    return True
 
 #define a method for save studio productions
 @typechecked
@@ -90,15 +67,10 @@ def insert_studio_production(anime_id: int, studio_id: int) -> bool:
         raise TypeError("invalid studio_id")
     
     #insert data
-    __cursor.execute(f"INSERT INTO anime_production_studio VALUES({anime_id}, {studio_id})")
+    __cursor.execute("INSERT INTO anime_production_studio VALUES(%s, %s)", [anime_id, studio_id])
     __cursor.execute("COMMIT;")
-    
-    #check insert
-    __cursor.execute(f"SELECT * FROM anime_production_studio WHERE anime_id = {anime_id} AND studio_id = {studio_id}")
-    
-    inputs: tuple = (anime_id, studio_id)
-    
-    return inputs == __cursor.fetchone()
+
+    return True
 
 #define a method for insert new studio
 @typechecked
@@ -109,19 +81,11 @@ def insert_studio(studio_id: int, studio_name: str) -> bool:
     if len(studio_name) > 50:
         raise ValueError("studio name is so big")
     
-    #set studio name in better format
-    studio_name = __better_format_str(studio_name)
-    
     #insert data
-    __cursor.execute(f"INSERT INTO studio VALUES({studio_id}, {studio_name}, DEFAULT)")
+    __cursor.execute("INSERT INTO studio VALUES(%s, %s, DEFAULT)", [studio_id, studio_name])
     __cursor.execute("COMMIT;")
-    
-    #check insert
-    __cursor.execute(f"SELECT * FROM studio WHERE studio_id = {studio_id}")
-    
-    inputs: tuple = (studio_id, studio_name, 0)
-    
-    return inputs == __cursor.fetchone()
+
+    return True
 
 #define a method for insert new anime
 @typechecked
@@ -149,19 +113,12 @@ def insert_anime(anime_id: int,
     if avg_episode_time < 0:
         raise TypeError("invalid avg_episode_time")
     
-    #get anime name better format
-    anime_name = __better_format_str(anime_name)
-    
     #insert data
-    __cursor.execute(f"INSERT INTO anime VALUES({anime_id}, {anime_name}, '{anime_status}', DEFAULT, {episodes}, '{year}', '{season}', {avg_episode_time}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
+    __cursor.execute("INSERT INTO anime VALUES(%s, %s, %s, DEFAULT, %s, %s, %s, %s, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)"
+                    [anime_id, anime_name, anime_status, episodes, year, season, avg_episode_time])
     __cursor.execute("COMMIT;")
-    
-    #check insert
-    __cursor.execute(f"SELECT * FROM anime WHERE anime_id = {anime_id}")
-    
-    inputs: tuple = (anime_id, anime_name, anime_status, episodes, year, season, avg_episode_time)
-    
-    return inputs == __cursor.fetchone()
+
+    return True
 
 #define a method for create new account
 @typechecked
@@ -171,15 +128,10 @@ def insert_account(user_name: str) -> bool:
         raise TypeError("invalid user name")
     
     #insert data
-    __cursor.execute(f"INSERT INTO account VALUES(DEFAULT, '{user_name}', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)")
+    __cursor.execute("INSERT INTO account VALUES(DEFAULT, %s, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)", [user_name])
     __cursor.execute("COMMIT;")
-    
-    #check insert
-    __cursor.execute(f"SELECT * FROM account WHERE user_name = '{user_name}'")
-    
-    inputs: tuple = (user_name, 0, 0, 0, 0, 0, 0)
-    
-    return inputs == __cursor.fetchone()[1:]
+
+    return True
 
 #define a method for add anime to a list
 @typechecked
@@ -197,15 +149,10 @@ def insert_to_list(anime_id: int, account_id: int, score: int, status: str, epis
         raise TypeError("invalid episodes number")
     
     #insert data
-    __cursor.execute(f"INSERT INTO list VALUES({anime_id}, {account_id}, {score}, '{status}', {episodes_watched})")
+    __cursor.execute("INSERT INTO list VALUES(%s, %s, %s, %s, %s)", [anime_id, account_id, score, status, episodes_watched])
     __cursor.execute("COMMIT;")
-    
-    #check insert
-    __cursor.execute(f"SELECT * FROM list WHERE anime_id = {anime_id} AND account_id = {account_id}")
-    
-    inputs: tuple = (anime_id, account_id, score, status, episodes_watched)
-    
-    return inputs == __cursor.fetchone()
+
+    return True
 
 #*check exist methods
 #check exist genre method
@@ -216,7 +163,7 @@ def check_exist_genre(genre_id: int) -> bool:
         raise TypeError("invalid genre_id")
     
     #search genre
-    __cursor.execute(f"SELECT genre_id FROM genre WHERE genre_id = {genre_id}")
+    __cursor.execute("SELECT genre_id FROM genre WHERE genre_id = %s", [genre_id])
     
     #check result
     return tuple([genre_id]) == __cursor.fetchone()
@@ -231,7 +178,7 @@ def check_exist_anime_genres(anime_id: int, genre_id: int) -> bool:
         raise TypeError("invalid genre_id")
     
     #search anime_genres
-    __cursor.execute(f"SELECT anime_id, genre_id FROM anime_genres WHERE anime_id = {anime_id} AND genre_id = {genre_id}")
+    __cursor.execute("SELECT anime_id, genre_id FROM anime_genres WHERE anime_id = %s AND genre_id = %s", [anime_id, genre_id])
     
     #check result
     return tuple([anime_id, genre_id]) == __cursor.fetchone()
@@ -246,7 +193,7 @@ def check_exist_studio_production(anime_id: int, studio_id: int) -> bool:
         raise TypeError("invalid studio_id")
     
     #search studio_production
-    __cursor.execute(f"SELECT anime_id, studio_id FROM anime_production_studio WHERE anime_id = {anime_id} AND studio_id = {studio_id}")
+    __cursor.execute("SELECT anime_id, studio_id FROM anime_production_studio WHERE anime_id = %s AND studio_id = %s", [anime_id, studio_id])
     
     #check result
     return tuple([anime_id, studio_id]) == __cursor.fetchone()
@@ -259,7 +206,7 @@ def check_exist_studio(studio_id: int) -> bool:
         raise TypeError("invalid studio_id")
     
     #search studio
-    __cursor.execute(f"SELECT studio_id FROM studio WHERE studio_id = {studio_id}")
+    __cursor.execute("SELECT studio_id FROM studio WHERE studio_id = %s", [studio_id])
     
     #check result
     return tuple([studio_id]) == __cursor.fetchone()
@@ -272,7 +219,7 @@ def check_exist_anime(anime_id: int) -> bool:
         raise TypeError("invalid anime_id")
     
     #search anime
-    __cursor.execute(f"SELECT anime_id FROM anime WHERE anime_id = {anime_id}")
+    __cursor.execute("SELECT anime_id FROM anime WHERE anime_id = %s", [anime_id])
     
     #check result
     return tuple([anime_id]) == __cursor.fetchone()
@@ -285,7 +232,7 @@ def check_exist_account(user_name: str) -> bool:
         raise TypeError("invalid user_name")
     
     #search account
-    __cursor.execute(f"SELECT user_name FROM account WHERE user_name = '{user_name}'")
+    __cursor.execute("SELECT user_name FROM account WHERE user_name = %s", [user_name])
     
     #check result
     return tuple([user_name]) == __cursor.fetchone()
@@ -300,7 +247,7 @@ def check_exist_on_list(anime_id: int, account_id: int) -> bool:
         raise TypeError("invalid account_id")
     
     #search on list
-    __cursor.execute(f"SELECT anime_id, account_id FROM list WHERE anime_id = {anime_id} AND account_id = {account_id}")
+    __cursor.execute("SELECT anime_id, account_id FROM list WHERE anime_id = %s AND account_id = %s", [anime_id, account_id])
     
     #check result
     return tuple([anime_id, account_id]) == __cursor.fetchone()
