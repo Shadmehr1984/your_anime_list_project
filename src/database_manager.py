@@ -1,5 +1,5 @@
 from typeguard import typechecked
-from Db_connector import Db_connector
+from src.Db_connector import Db_connector
 from dotenv import load_dotenv
 from os import getenv
 #load .env file
@@ -108,7 +108,7 @@ def insert_anime(anime_id: int,
         raise TypeError("invalid avg_episode_time")
     
     #insert data
-    __cursor.execute("INSERT INTO anime VALUES(%s, %s, %s, DEFAULT, %s, %s, %s, %s, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)"
+    __cursor.execute("INSERT INTO anime VALUES(%s, %s, %s, DEFAULT, %s, %s, %s, %s, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)",
                     [anime_id, anime_name, anime_status, episodes, year, season, avg_episode_time])
     __cursor.execute("COMMIT;")
 
