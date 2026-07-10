@@ -1,0 +1,59 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36" version="28.1.1">
+  <diagram name="‫صفحه - 1‬" id="fTBuljJX30I5aS-0Db6g">
+    <mxGraphModel dx="872" dy="1658" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="LG3swcQcRO1OCMTRQcfp-5" value="account" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="-780" width="160" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="LG3swcQcRO1OCMTRQcfp-41" value="&lt;div&gt;account_id&lt;/div&gt;&lt;div&gt;user_name&lt;/div&gt;&lt;div&gt;copleted_count&lt;/div&gt;&lt;div&gt;paln_to_watch_count&lt;/div&gt;&lt;div&gt;on_hold_count&lt;/div&gt;&lt;div&gt;dropped_count&lt;/div&gt;&lt;div&gt;watching_count&lt;/div&gt;&lt;div&gt;avg_score&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="LG3swcQcRO1OCMTRQcfp-5">
+          <mxGeometry y="50" width="160" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="LG3swcQcRO1OCMTRQcfp-7" value="anime" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="-620" width="160" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="LG3swcQcRO1OCMTRQcfp-42" value="anime_id&lt;div&gt;anime_name&lt;/div&gt;&lt;div&gt;score&lt;/div&gt;&lt;div&gt;status&lt;/div&gt;&lt;div&gt;episodes&lt;/div&gt;&lt;div&gt;year&lt;/div&gt;&lt;div&gt;season&lt;/div&gt;&lt;div&gt;avg_episode_time&lt;/div&gt;&lt;div&gt;&lt;div&gt;copleted_count&lt;/div&gt;&lt;div&gt;paln_to_watch_count&lt;/div&gt;&lt;div&gt;on_hold_count&lt;/div&gt;&lt;div&gt;dropped_count&lt;/div&gt;&lt;div&gt;watching_count&lt;/div&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="LG3swcQcRO1OCMTRQcfp-7">
+          <mxGeometry y="50" width="160" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="LG3swcQcRO1OCMTRQcfp-11" value="genre" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="-390" width="160" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="LG3swcQcRO1OCMTRQcfp-43" value="genre_id&lt;div&gt;genre_name&lt;/div&gt;&lt;div&gt;anime_numbers&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="LG3swcQcRO1OCMTRQcfp-11">
+          <mxGeometry y="50" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="LG3swcQcRO1OCMTRQcfp-13" value="studio" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="-550" width="160" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="LG3swcQcRO1OCMTRQcfp-44" value="studio_id&lt;div&gt;studio_name&lt;/div&gt;&lt;div&gt;anime_numbers&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="LG3swcQcRO1OCMTRQcfp-13">
+          <mxGeometry y="50" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="LG3swcQcRO1OCMTRQcfp-73" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERmany;startArrow=ERmany;rounded=0;entryX=1.006;entryY=0.17;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.462;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="LG3swcQcRO1OCMTRQcfp-41" target="LG3swcQcRO1OCMTRQcfp-42">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="319.03999999999996" y="-720" as="sourcePoint" />
+            <mxPoint x="320" y="-539.98" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="350" y="-664.98" />
+              <mxPoint x="356" y="-664.98" />
+              <mxPoint x="396" y="-574.98" />
+              <mxPoint x="346" y="-584.98" />
+              <mxPoint x="376" y="-564.98" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LG3swcQcRO1OCMTRQcfp-74" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERmany;startArrow=ERmany;rounded=0;exitX=0.994;exitY=0.45;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="LG3swcQcRO1OCMTRQcfp-42">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="260" y="-480" as="sourcePoint" />
+            <mxPoint x="346" y="-469" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LG3swcQcRO1OCMTRQcfp-75" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERmany;startArrow=ERmany;rounded=0;exitX=1.013;exitY=0.765;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="LG3swcQcRO1OCMTRQcfp-42" target="LG3swcQcRO1OCMTRQcfp-11">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="400" y="-310" as="sourcePoint" />
+            <mxPoint x="500" y="-410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
