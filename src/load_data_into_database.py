@@ -1,5 +1,5 @@
-import data_handling
-import database_manager
+from src import data_handling
+from src import database_manager
 from typeguard import typechecked, TypeCheckError
 
 #!temp methods:
@@ -121,7 +121,7 @@ def load_anime(anime_id: int) -> bool :
 
 #load all seasonal anime info from mal into database (inside this method all genres and studios the anime have will be added)
 @typechecked
-def load_seasonal_anime(year: int, season: str, limit: int|None) -> bool:
+def load_seasonal_anime(year: int, season: str, limit: int = 1000) -> bool:
     #invalid input checking
     if year not in range(1930, 2028):
         raise TypeError("invalid year")
@@ -138,7 +138,7 @@ def load_seasonal_anime(year: int, season: str, limit: int|None) -> bool:
     return True
 
 #load all account info from mal into database (inside this method all genres and studios the anime have will be added)
-def load_account_info(user_name: str, limit: int|None) -> bool:
+def load_account_info(user_name: str, limit: int = 1000) -> bool:
     #invalid input checking
     if len(user_name) < 5:
         raise TypeError("invalid user_name")
