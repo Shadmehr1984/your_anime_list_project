@@ -1,4 +1,4 @@
-client id.txt
+.pytest_cache
 __pycache__
 *.json
 .env
