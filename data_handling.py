@@ -2,12 +2,13 @@ import requests
 import json
 from typeguard import typechecked
 from time import sleep
+from dotenv import load_dotenv
+from os import getenv
+#load .env file
+load_dotenv()
 
 #take client id
-__client_id: str
-with open('client id.txt') as file:
-    __client_id = file.readline().rstrip('\n')
-
+__client_id: str = getenv('X_MAL_CLIENT_ID')
 
 #!inner functions:
 
