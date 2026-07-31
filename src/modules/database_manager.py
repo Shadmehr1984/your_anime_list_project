@@ -1,7 +1,8 @@
 from typeguard import typechecked
-from src.Db_connector import Db_connector
+from database.Db_connector import Db_connector
 from dotenv import load_dotenv
 from os import getenv
+
 #load .env file
 load_dotenv()
 

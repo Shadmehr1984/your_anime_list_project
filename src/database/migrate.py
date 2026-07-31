@@ -1,4 +1,4 @@
-from src.Db_connector import Db_connector
+from database.Db_connector import Db_connector
 
 #connect to database
 Db_connector()

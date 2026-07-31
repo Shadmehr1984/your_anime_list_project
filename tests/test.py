@@ -1,5 +1,5 @@
-from src import data_handling
-from src import database_manager
+from src.modules import data_handling
+from src.modules import database_manager
 from typeguard import TypeCheckError
 import json
 import pytest
