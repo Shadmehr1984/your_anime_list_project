@@ -4,6 +4,7 @@ from typeguard import typechecked
 from time import sleep
 from dotenv import load_dotenv
 from os import getenv
+
 #load .env file
 load_dotenv()
 
