@@ -1,6 +1,10 @@
-from src import data_handling
-from src import database_manager
+from src.modules import data_handling
+from src.modules import database_manager
 from typeguard import typechecked, TypeCheckError
+from src.logger.logger import Logger
+
+#initial logger
+logger = Logger(__name__)
 
 #!temp methods:
 
@@ -29,12 +33,12 @@ def load_anime(anime_id: int) -> bool :
     try:
         result: dict = data_handling.get_anime_info(anime_id, False)
     except KeyError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
         return False
     
     #check anime exist
     if database_manager.check_exist_anime(anime_id):
-        print("anime already exist")
+        logger.log("anime already exist")
         return False
     
     #load anime info to database
@@ -52,19 +56,19 @@ def load_anime(anime_id: int) -> bool :
             avg_episode_time=(result['average_episode_duration'])/60
         )
     except TypeCheckError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
         return False
     except TypeError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
         return False
     except ValueError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
         return False
     except KeyError as e:
-        print(e.__str__())
+        logger.log(e.__str__())
         return False
     
-    print('anime inserted')
+    logger.log('anime inserted')
     
     #add new genres
     try:
@@ -72,24 +76,24 @@ def load_anime(anime_id: int) -> bool :
             if not database_manager.check_exist_genre(genre['id']):
                 database_manager.insert_genre(genre['id'], genre['name'])
     except TypeCheckError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
     except TypeError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
     finally:
-        print("all anime genres checked")
+        logger.log("all anime genres checked")
     
     #add anime genres
     try:
         for genre in result['genres']:
             database_manager.insert_anime_genres(anime_id, genre['id'])
     except TypeCheckError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
     except TypeError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
     except ValueError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
     finally:
-        print("all anime genres added")
+        logger.log("all anime genres added")
     
     #add new studios
     try:
@@ -97,26 +101,26 @@ def load_anime(anime_id: int) -> bool :
             if not database_manager.check_exist_studio(studio['id']):
                 database_manager.insert_studio(studio['id'], studio['name'])
     except TypeCheckError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
     except TypeError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
     except ValueError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
     finally:
-        print('all anime studios checked')
+        logger.log('all anime studios checked')
     
     #add anime studio production
     try:
         for studio in result['studios']:
             database_manager.insert_studio_production(anime_id, studio['id'])
     except TypeCheckError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
     except TypeError as e:
-        print(e.__str__() + '\n')
+        logger.log(e.__str__() + '\n')
     finally:
-        print("all anime studio production added")
+        logger.log("all anime studio production added")
     
-    print('\n')
+    
     return True
 
 #load all seasonal anime info from mal into database (inside this method all genres and studios the anime have will be added)
@@ -133,8 +137,8 @@ def load_seasonal_anime(year: int, season: str, limit: int = 1000) -> bool:
     for anime in result['data']:
         load_anime(anime['node']['id'])
     
-    print("all seasonal anime added")
-    print('\n')
+    logger.log("all seasonal anime added")
+    
     return True
 
 #load all account info from mal into database (inside this method all genres and studios the anime have will be added)
@@ -147,15 +151,15 @@ def load_account_info(user_name: str, limit: int = 1000) -> bool:
     try:
         result: dict = data_handling.get_user_list(user_name, False, limit)
     except KeyError as e:
-        print(e)
+        logger.log(e)
         return False
     
     #load user if not exist
     if not database_manager.check_exist_account(user_name):
         database_manager.insert_account(user_name)
-        print("user added")
+        logger.log("user added")
     else:
-        print("user already exist")
+        logger.log("user already exist")
         return False
     
     #get account id on database
@@ -171,7 +175,7 @@ def load_account_info(user_name: str, limit: int = 1000) -> bool:
         if not database_manager.check_exist_anime(anime_id):
             anime_inserted = load_anime(anime_id)
         if not anime_inserted:
-            print("anime not inserted")
+            logger.log("anime not inserted")
             continue
         
         #add anime to user's list
@@ -179,8 +183,8 @@ def load_account_info(user_name: str, limit: int = 1000) -> bool:
         status: str = __get_right_status(anime['list_status']['status'])
         episodes_watched: int = anime['list_status']['num_episodes_watched']
         database_manager.insert_to_list(anime_id, account_id, score, status, episodes_watched)
-        print(f"{anime_id} anime added to {user_name} list\n")
+        logger.log(f"{anime_id} anime added to {user_name} list\n")
     
-    print("finish")
+    logger.log("finish")
     return True
 

@@ -1,5 +1,5 @@
 from typeguard import typechecked
-from database.Db_connector import Db_connector
+from src.database.Db_connector import Db_connector
 from dotenv import load_dotenv
 from os import getenv
 

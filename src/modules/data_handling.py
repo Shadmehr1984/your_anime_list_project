@@ -4,6 +4,10 @@ from typeguard import typechecked
 from time import sleep
 from dotenv import load_dotenv
 from os import getenv
+from src.logger.logger import Logger
+
+#initial logger
+logger = Logger(__name__)
 
 #load .env file
 load_dotenv()
@@ -51,7 +55,7 @@ def get_anime_info(anime_id: int, save_data: bool) -> dict:
     else:
         anime_name: str = result['alternative_titles']['en']
         if len(anime_name) == 0: anime_name = result['title']
-        print(f'anime {anime_name} find with {anime_id} ID')
+        logger.log(f'anime {anime_name} find with {anime_id} ID')
     
     #saving or not saving data
     if save_data:__save_data(result)
@@ -85,7 +89,7 @@ def get_user_list(user_name: str, save_data: bool, limit: int|None) -> dict:
     elif status_code != 200:
         raise KeyError("user dont exist")
     else:
-        print(f'user {user_name} find')
+        logger.log(f'user {user_name} find')
     
     #saving or not saving data
     if save_data:__save_data(result)
