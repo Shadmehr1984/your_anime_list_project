@@ -1,10 +1,5 @@
 from typeguard import typechecked
 from src.database.Db_connector import Db_connector
-from dotenv import load_dotenv
-from os import getenv
-
-#load .env file
-load_dotenv()
 
 #connect to root user
 Db_connector()
