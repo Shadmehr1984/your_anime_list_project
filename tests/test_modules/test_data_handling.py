@@ -1,5 +1,5 @@
 import pytest
-from src.modules import data_handling
+from src.modules.main import data_handling
 from typeguard import TypeCheckError
 import json
 

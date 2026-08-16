@@ -1,5 +1,5 @@
 import pytest
-from src.modules import database_manager
+from src.modules.main import database_manager
 from typeguard import TypeCheckError
 
 

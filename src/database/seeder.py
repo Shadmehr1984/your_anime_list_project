@@ -1,4 +1,4 @@
-from src.modules.load_data_into_database import load_account_info
+from src.modules.main.load_data_into_database import load_account_info
 
 #get some user names
 user_names: list[str] = []
