@@ -5,7 +5,7 @@ class Logger:
         self.module_name = module_name
     
     def log(self, massage: str) -> None:
-        time_section = "[" + str(datetime.now()) + "]"
+        time_section = "[" + str(datetime.now().isoformat(sep=" ", timespec="seconds")) + "]"
         module_name_section = "[" + self.module_name + "]"
         massage_section = "[" + massage + "]"
         log = time_section + module_name_section + massage_section
