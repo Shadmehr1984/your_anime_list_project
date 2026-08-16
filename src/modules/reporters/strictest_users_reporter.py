@@ -1,5 +1,9 @@
 from src.report_maker.ReportMaker import ReportMaker
 from src.report_extractor.ReportExtractor import ReportExtractor
+from src.logger.logger import Logger
+
+#initial logger
+logger = Logger(__name__)
 
 #extract report
 query = """
@@ -10,6 +14,8 @@ LIMIT 3
 """
 
 data = ReportExtractor.extract(query)
+
+logger.log("report extracted")
 
 #make report
 report_first_half = """
@@ -27,7 +33,7 @@ report_first_half = """
 
     <style>
         /* ============================================================
-           WHITE & TURQUOISE THEME · Light & Clean
+            WHITE & TURQUOISE THEME · Light & Clean
            ============================================================ */
         :root {
             --bg-primary: #f2f9fc;
@@ -319,3 +325,5 @@ for item in data:
     report_maker.add_item(item)
 
 report_maker.make()
+
+logger.log("report created")
