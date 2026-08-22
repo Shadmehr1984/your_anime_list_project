@@ -676,6 +676,21 @@ BEGIN
 END //
 DELIMITER ;
 
+
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS top_genres_by_anime_count_report //
+
+CREATE PROCEDURE top_genres_by_anime_count_report()
+BEGIN
+	SELECT genre_name, anime_numbers
+	FROM genre
+	ORDER BY anime_numbers DESC
+	LIMIT 10;
+END//
+
+DELIMITER ;
+
 #!events
 
 
