@@ -213,7 +213,7 @@ BEGIN
     LIMIT 3;
 END //
 
-DELIMITER;
+DELIMITER ;
 
 
 DELIMITER //
@@ -228,4 +228,24 @@ BEGIN
     LIMIT 10;
 END //
 
-DELIMITER;
+DELIMITER ;
+
+
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS top_studios_by_average_score_report //
+
+CREATE PROCEDURE top_studios_by_average_score_report()
+BEGIN
+	SELECT studio.studio_name, ROUND(AVG(anime.score), 2) AS avg_score, COUNT(anime.anime_id) AS products
+	FROM anime_production_studio
+	LEFT JOIN studio
+	USING(studio_id)
+	LEFT JOIN anime
+	USING(anime_id)
+	GROUP BY studio.studio_id
+	HAVING avg_score > 0
+	ORDER BY avg_score DESC
+	LIMIT 10;
+END //
+DELIMITER ;
