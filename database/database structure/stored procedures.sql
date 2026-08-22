@@ -199,3 +199,33 @@ DELIMITER //
         TRUNCATE log_list;
     END //
 DELIMITER ;
+
+
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS strictest_users_report //
+
+CREATE PROCEDURE strictest_users_report()
+BEGIN
+    SELECT user_name, avg_score, completed_count + dropped_count AS rating_count
+    FROM account
+    ORDER BY avg_score ASC
+    LIMIT 3;
+END //
+
+DELIMITER;
+
+
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS active_studios_report //
+
+CREATE PROCEDURE active_studios_report()
+BEGIN
+    SELECT studio_name, product_numbers
+    FROM studio
+    ORDER BY product_numbers DESC
+    LIMIT 10;
+END //
+
+DELIMITER;

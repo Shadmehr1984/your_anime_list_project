@@ -7,10 +7,7 @@ logger = Logger(__name__)
 
 #extract report
 query = """
-SELECT studio_name, product_numbers
-FROM studio
-ORDER BY product_numbers DESC
-LIMIT 10
+CALL active_studios_report();
 """
 
 data = ReportExtractor.extract(query)

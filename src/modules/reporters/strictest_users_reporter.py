@@ -7,10 +7,7 @@ logger = Logger(__name__)
 
 #extract report
 query = """
-SELECT user_name, avg_score, completed_count + dropped_count AS rating_count
-FROM account
-ORDER BY avg_score ASC
-LIMIT 3
+CALL strictest_users_report();
 """
 
 data = ReportExtractor.extract(query)
