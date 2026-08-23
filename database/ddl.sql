@@ -691,6 +691,27 @@ END//
 
 DELIMITER ;
 
+
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS genre_average_scores //
+
+CREATE PROCEDURE genre_average_scores()
+BEGIN
+	SELECT genre.genre_name, ROUND(AVG(anime.score), 2) AS avg_score, genre.anime_numbers
+	FROM anime_genres
+	LEFT JOIN genre
+	USING(genre_id)
+	LEFT JOIN anime
+	USING(anime_id)
+	GROUP BY genre.genre_id
+	HAVING avg_score > 0
+	ORDER BY avg_score DESC
+	LIMIT 10;
+END//
+
+DELIMITER ;
+
 #!events
 
 
